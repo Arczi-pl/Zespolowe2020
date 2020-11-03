@@ -12,10 +12,15 @@ Krzysztof Kądzioła,
 Piotr Piszczek
 
 Wstępne założenia:
+
 Backend - python + django 
+
 Frontend - js + electron + react 
+
 Hosting - heroku 
+
 Bazy danych - mysql 
+
 Kontrola wersji git + github
  
 
