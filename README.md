@@ -23,4 +23,3 @@ Bazy danych - mysql
 
 Kontrola wersji git + github
  
-
