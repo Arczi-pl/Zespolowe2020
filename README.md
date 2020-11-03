@@ -17,5 +17,5 @@ Frontend - js + electron + react
 Hosting - heroku 
 Bazy danych - mysql 
 Kontrola wersji git + github
-
+ 
 
