@@ -1,12 +1,21 @@
 # Zespolowe2020
 Projekt na przedmiot Programowanie Zespołowe na Politechnice Wrocławskiej
 
-Temat:
-
+Temat: Mini serwis hostingu plików wraz z możliwością prostego przesyłu i synchronizacji plików pomiędzy urządzeniami.
 
 Skład zespołu: 
-
+Artur Sikorski
+Jakub Sroka
+Kamil Lachowski
+Kacper Markowicz
+Krzysztof Kądzioła
+Piotr Piszczek
 
 Wstępne założenia:
+Backend - python + django 
+Frontend - js + electron + react 
+Hosting - heroku 
+Bazy danych - mysql 
+Kontrola wersji git + github
 
 
