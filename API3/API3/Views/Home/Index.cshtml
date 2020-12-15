@@ -1,0 +1,64 @@
+﻿@model List<API2.Models.FileDTO>
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+
+<div>
+    <div>
+        <br />
+        
+        <input type="file" id="myfile" /> <br />
+        <input type="button" id="btnUpload" value="Upload" />
+    </div>
+</div>
+
+<div>
+    <div id="container">
+        <ul>
+            @foreach (var fileObj in Model)
+            {
+                <li><span>@fileObj.FileActualName </span><a href="#" uname="@fileObj.FileUniqueName" class="download">Click Here to Download</a></li>
+
+            }
+        </ul>
+    </div>
+</div>
+
+@section scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".download").click(function () {
+                var unqiuename = $(this).attr('uname');
+                var url = "http://localhost:44348/api/FilesData/DownloadFile?uniqueName=" + unqiuename
+                window.open(url);
+            });
+            //$("#myfile").change(function () {
+            //    $("#btnUpload").trigger('click');
+            //});
+            $("#btnUpload").click(function () {
+                var data = new FormData();
+                var files = $("#myfile").get(0).files;
+                // Add the uploaded image content to the form data collection
+                if (files.length > 0) {
+                    data.append("UploadedImage", files[0]);
+                }
+                var ajaxRequest = $.ajax({
+                    type: "POST",
+                    //url: "/api/Values/PostFormData",
+                    url: "http://localhost:44348/api/FilesData/UploadFile",
+                    contentType: false,
+                    processData: false,
+                    data: data,
+                    success: function (response) {
+                        alert('file uploaded');
+                        console.log(response);
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+}
