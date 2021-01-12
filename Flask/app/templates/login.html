@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{{ url_for('static', filename='icon.png')}}">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
+
+    <title>Przesyłanie plików</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='bootstrap.min.css')}}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='login.css')}}" rel="stylesheet">
+  <script data-dapp-detection="">!function(){let e=!1;function n(){if(!e){const n=document.createElement("meta");n.name="dapp-detected",document.head.appendChild(n),e=!0}}if(window.hasOwnProperty("ethereum")){if(window.__disableDappDetectionInsertion=!0,void 0===window.ethereum)return;n()}else{var t=window.ethereum;Object.defineProperty(window,"ethereum",{configurable:!0,enumerable:!1,set:function(e){window.__disableDappDetectionInsertion||n(),t=e},get:function(){if(!window.__disableDappDetectionInsertion){const e=arguments.callee;e&&e.caller&&e.caller.toString&&-1!==e.caller.toString().indexOf("getOwnPropertyNames")||n()}return t}})}}();</script></head>
+
+<body class="text-center">
+
+<div class="container login-container">
+            <div class="row">
+                <div class="col-md-6 login-form-1">
+                    <h3>Przesyłanie pliku</h3>
+                    <br /><br />
+                    <div class="form-group">
+                      <input id="rec_id" class="form-control" placeholder="Kod wysyłającego" required="" autofocus="">
+                    </div>
+                    <div class="form-group">
+                      <a onclick="func();"><button class="btnSubmit" type="submit" id="submit" name="submit">Odbierz</button></a>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                      <a href="{{ url_for('receive') }}"><button class="btnSubmit" type="submit" id="submit" name="submit">Generuj kod</button></a>
+                    </div>
+                </div>
+                <div class="col-md-6 login-form-2">
+                    <h3>Logowanie</h3>
+                    <form class="form-signin" action="" method="post" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                      <input type="email" id="username" class="form-control" name="username" placeholder="Login" required="" autofocus="">
+                    </div>
+                    <div class="form-group">
+                      <input type="password" id="password" class="form-control" name="password" placeholder="Hasło" required="">
+                    </div>
+                    <div class="checkbox mb-3">
+                      <label>
+                        <input type="checkbox" value="y" id="remember_me" name="remember_me"> Pamiętaj mnie
+                      </label>
+                    </div>
+                    <button class="btnSubmit" type="submit" id="submit" name="submit" value="Sign in">Zaloguj</button>
+                    <br />
+                  </form>
+                              </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+          function func(){	
+              window.location.href = "{{ url_for('send') }}?id=" + document.getElementById("rec_id").value;
+          }
+      </script>
+
+
+</body></html>  
+
