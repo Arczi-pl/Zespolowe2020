@@ -12,10 +12,10 @@ login = LoginManager(app)
 login.login_view = 'login'
 #ZSEzse123
 #testy_strony_banku@wp.pl
-app.config['MAIL_SERVER']='smtp.poczta.onet.pl'
+app.config['MAIL_SERVER']='
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'kadziola@vp.pl'
-app.config['MAIL_PASSWORD'] = 'BTzmgPs69'
+app.config['MAIL_USERNAME'] = ''
+app.config['MAIL_PASSWORD'] = ''
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
