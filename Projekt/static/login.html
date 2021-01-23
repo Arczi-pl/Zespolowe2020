@@ -1,14 +1,15 @@
 <head>
   <link rel="stylesheet" href="style.css">
-  <script src="login.js"></script>
+  <script src="script.js"></script>
 </head>
 <body>
   <h1>Login</h1>
   <form action="../login" method="get" id="login_form">
     <label>Email:</label>
-    <input type="text" id="username" name="username"><br>
+    <input type="text" id="email" name="email"><br>
     <label>Password:</label>
     <input type="password" id="password" name="password"><br>
-    <button class="Button" type="button" onclick="login()">Submit</button>
+    <button class="button" type="button" onclick="login()">Submit</button>
   </form>
+  <a href="http://0.0.0.0:8080/static/reset_password.html" class="button" type="button">Forgot password</a>
 </body>

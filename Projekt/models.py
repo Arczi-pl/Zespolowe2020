@@ -17,15 +17,14 @@ class User(Base):
         index=True)
     password = Column(String(MAX_STRING_LEN))
 
-class File(Base):
-    __tablename__ = "files"
-
-    id = Column(
-        Integer,
-        primary_key=True,
+class Token(Base):
+    __tablename__ = "tokens"
+    id = Column(Integer, primary_key=True)
+    email = Column(
+        String(MAX_STRING_LEN),
         index=True
     )
-    owner = Column(
+    token = Column(
         String(MAX_STRING_LEN),
-        index=True)
-    file = Column(String(MAX_STRING_LEN))
+        index=True
+    )
