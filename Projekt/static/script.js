@@ -22,7 +22,7 @@ async function login() {
     let data = await response.json();
     localStorage.setItem('token', data.access_token);
     localStorage.setItem('refresh_token', data.refresh_token);
-    location.href = "http://0.0.0.0:8080/static/send_form.html";
+    location.href = "http://0.0.0.0:8080/";
 }
 
 async function refresh_token() {
