@@ -3,13 +3,19 @@ from sqlalchemy.orm import Session
 import models, schemas
 import hashlib
 
-def save_file(user, file, file_path):
+def create_sharing_link(db, user, folder_name):
     return 1
 
-def get_file(user, file_path):
+def save_files(db, user, files):
     return 1
 
-def delete_file(user, file_path):
+def save_file(db, user, file):
+    return 1
+
+def get_file(db, user, file_path):
+    return 1
+
+def delete_file(db, user, file_path):
     return 1
 
 def get_user_by_username(db: Session, email: str):

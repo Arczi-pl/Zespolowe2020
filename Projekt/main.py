@@ -62,38 +62,76 @@ def authjwt_exception_handler(request: Request, exc: AuthJWTException):
         content={"detail": exc.message}
     )
 
-@app.delete("/delete_file/{file_path}")
+@app.post("/create_sharing_link")
+def create_sharing_link(
+    Authorize: AuthJWT = Depends(),
+    db: Session = Depends(get_db),
+):
+    Authorize.jwt_required()
+    user = Authorize.get_jwt_subject()
+
+    return 1
+
+@app.get("/shared_folder/{link}")
+def get_shared_files(
+    link: str,
+    db: Session = Depends(get_db),
+):
+    return 1
+
+@app.get("/folder")
+def get_folder_content(
+    Authorize: AuthJWT = Depends(),
+    db: Session = Depends(get_db),
+):
+    Authorize.jwt_required()
+    user = Authorize.get_jwt_subject()
+
+    return 1
+
+@app.delete("/delete_file")
 def delete_file(
-    file_path: str,
+    form: schemas.File_access,
     Authorize: AuthJWT = Depends(),
+    db: Session = Depends(get_db),
 ):
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
-    return crud.delete_file(user, file_path)
 
-@app.get("/get_file/{file_path}")
-def get_file(
-    file_path: str,
+    return crud.delete_file(db, user, form.file_path)
+
+@app.post("/download_file")
+def download_file(
+    form: schemas.File_access,
     Authorize: AuthJWT = Depends(),
+    db: Session = Depends(get_db),
 ):
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
-    return crud.get_file(user, file_path)
 
-@app.post("/send_file/{file_path}")
-def send_file(
-    file_path: str,
-    Authorize: AuthJWT = Depends(),
+    file = crud.download_file(db, user, form.file_path)
+    if not file:
+        raise HTTPException(
+            status_code=400,
+            detail="Problem with uploading file"
+        )
+
+    return file
+
+@app.post("/upload_file")
+def upload_file(
     files: List[UploadFile] = File(...),
+    Authorize: AuthJWT = Depends(),
+    db: Session = Depends(get_db),
 ):
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
-    for file in files:
-        if not crud.save_file(user, file, file_path):
-            raise HTTPException(
-                status_code=400,
-                detail="Problem with sending file"
-            )
+
+    if not crud.saves_file(db, user, files):
+        raise HTTPException(
+            status_code=400,
+            detail="Problem with uploading"
+        )
 
     return {"desc": "Files successfully sent"}
 
@@ -104,9 +142,10 @@ def create_resetting_pass_token(
 ):
     if not crud.create_resetting_pass_token(db, request.email):
         raise HTTPException(status_code=400, detail="Incorrect username")
+
     return {"desc": "Check your email"}
 
-@app.post("/change_password/")
+@app.post("/change_password")
 def change_users_password(
     request: schemas.Reset_pass_form,
     db: Session = Depends(get_db),

@@ -30,3 +30,6 @@ class Reset_pass_request(BaseModel):
 class User_login(BaseModel):
     email: EmailStr
     password: str
+
+class File_access(BaseModel):
+    file_path: str
