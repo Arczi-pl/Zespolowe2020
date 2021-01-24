@@ -10,21 +10,43 @@ class User(Base):
         String(MAX_STRING_LEN),
         unique=True,
         primary_key=True,
-        index=True)
+        index=True,
+    )
     username = Column(
         String(MAX_STRING_LEN),
         unique=True,
-        index=True)
-    password = Column(String(MAX_STRING_LEN))
+        index=True,
+    )
+    password = Column(
+        String(MAX_STRING_LEN),
+    )
 
 class Token(Base):
     __tablename__ = "tokens"
-    id = Column(Integer, primary_key=True)
+
+    id = Column(
+        Integer,
+        primary_key=True,
+    )
     email = Column(
         String(MAX_STRING_LEN),
-        index=True
+        index=True,
     )
     token = Column(
         String(MAX_STRING_LEN),
-        index=True
+        index=True,
+    )
+
+class File(Base):
+    __tablename__ = "files"
+
+    filename = Column(
+        String(MAX_STRING_LEN),
+        unique=True,
+        primary_key=True,
+        index=True,
+    )
+    username = Column(
+        String(MAX_STRING_LEN),
+        index=True,
     )

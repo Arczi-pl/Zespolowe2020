@@ -8,7 +8,7 @@ import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, File, UploadFile, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 
 from starlette.responses import RedirectResponse, Response
@@ -109,14 +109,15 @@ def download_file(
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
 
-    file = crud.download_file(db, user, form.file_path)
+    path = form.file_path
+    file = crud.get_file(db, user, path)
     if not file:
         raise HTTPException(
             status_code=400,
             detail="Problem with uploading file"
         )
 
-    return file
+    return File_response('files/' + user + '/' + path)
 
 @app.post("/upload_file")
 def upload_file(
@@ -127,13 +128,13 @@ def upload_file(
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
 
-    if not crud.saves_file(db, user, files):
+    if not crud.save_files(db, user, files):
         raise HTTPException(
             status_code=400,
             detail="Problem with uploading"
         )
 
-    return {"desc": "Files successfully sent"}
+    return {"desc": "Files successfully saved"}
 
 @app.post("/reset_password")
 def create_resetting_pass_token(
@@ -176,16 +177,16 @@ def create_user(
     user: schemas.User_creation,
     db: Session = Depends(get_db),
 ):
-    user_exists = crud.get_user_by_username(db, email = user.email)
+    user_exists = crud.check_user_existance(db, user.email, user.username)
 
     if user_exists:
         raise HTTPException(status_code=400, detail="Username already registered")
 
-    new_user = crud.create_user(db, user = user)
+    new_user = crud.create_user(db, user)
     return new_user
 
-@app.post('/refresh')
-def refresh(Authorize: AuthJWT = Depends()):
+@app.post('/refresh_jwt')
+def refresh_jwt_token(Authorize: AuthJWT = Depends()):
     Authorize.jwt_refresh_token_required()
     current_user = Authorize.get_jwt_subject()
     new_access_token = Authorize.create_access_token(subject=current_user)
