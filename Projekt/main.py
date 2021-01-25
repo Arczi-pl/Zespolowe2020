@@ -87,7 +87,8 @@ def get_folder_content(
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
 
-    return 1
+    list_of_files = crud.get_list_of_files(db, user)
+    return {"files": list_of_files}
 
 @app.delete("/delete_file")
 def delete_file(
@@ -98,7 +99,10 @@ def delete_file(
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
 
-    return crud.delete_file(db, user, form.file_path)
+    if crud.delete_file(db, user, form.file_path):
+        return {"desc": "File successfully deleted"}
+    else:
+        return {"desc": "Such file didn't exist"}
 
 @app.post("/download_file")
 def download_file(
@@ -114,10 +118,10 @@ def download_file(
     if not file:
         raise HTTPException(
             status_code=400,
-            detail="Problem with uploading file"
+            detail="Such file doesn't exist"
         )
 
-    return File_response('files/' + user + '/' + path)
+    return FileResponse('files/' + user + '/' + path)
 
 @app.post("/upload_file")
 def upload_file(

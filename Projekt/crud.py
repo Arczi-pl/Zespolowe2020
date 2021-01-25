@@ -9,8 +9,9 @@ def create_sharing_link(db, user, folder_name):
     return 1
 
 def get_list_of_files(db, user):
-    files = db.query(models.File).filter(models.File.username == user).first()
+    files = db.query(models.File).filter(models.File.username == user).all()
 
+    print(files)
     file_names = []
     for file in files:
         file_names.append(file.filename)
@@ -50,7 +51,17 @@ def get_file(db, user, file_path):
     return db.query(models.File).filter(models.File.filename == file_path).first()
 
 def delete_file(db, user, file_path):
-    return 1
+    file = db.query(models.File).filter(models.File.filename == file_path).first()
+    if file:
+        path = "files/" + user + '/' + file.filename
+
+        os.remove(path)
+        db.delete(file)
+        db.commit()
+
+        return True
+    else:
+        return False
 
 def get_user_by_username(db: Session, name: str):
     return db.query(models.User).filter(
