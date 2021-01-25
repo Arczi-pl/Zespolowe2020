@@ -82,7 +82,9 @@ def list_shared_files(
     link: str,
     db: Session = Depends(get_db),
 ):
-    return 1
+    shared_files = []
+
+    return {"Shared files": shared_files}
 
 @app.post("/shared_folder/{link}")
 def download_shared_file(
@@ -90,7 +92,7 @@ def download_shared_file(
     form: schemas.File_access,
     db: Session = Depends(get_db),
 ):
-    return 1
+    return crud.change_users_password
 
 # List folders and their content
 
@@ -102,7 +104,9 @@ def get_folder_list(
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
 
-    return 1
+    folders = crud.get_list_of_folders(db, user)
+
+    return {"Folders": folders}
 
 @app.get("/folder")
 def get_folder_content(
@@ -120,16 +124,46 @@ def get_folder_content(
 # Basic folder actions
 
 @app.post("/create_folder")
-def create_folder():
-    return 1
+def create_folder(
+    form: schemas.Folder_create,
+    Authorize: AuthJWT = Depends(),
+    db: Session = Depends(get_db),
+):
+    Authorize.jwt_required()
+    user = Authorize.get_jwt_subject()
+
+    if crud.create_folder(db, user, form):
+        return {"desc": "Folder created"}
+    else:
+        return {"desc": "Problems with creating folder"}
 
 @app.delete("/delete_folder")
-def delete_folder():
-    return 1
+def delete_folder(
+    form: schemas.Folder_delete,
+    Authorize: AuthJWT = Depends(),
+    db: Session = Depends(get_db),
+):
+    Authorize.jwt_required()
+    user = Authorize.get_jwt_subject()
+
+    if crud.delete_folder(db, user, form):
+        return {"desc": "Folder deleted"}
+    else:
+        return {"desc": "Such folder didn't exist"}
 
 @app.post("/rename_folder")
-def delete_folder():
-    return 1
+def rename_folder(
+    form: schemas.Folder_rename,
+    Authorize: AuthJWT = Depends(),
+    db: Session = Depends(get_db),
+):
+    Authorize.jwt_required()
+    user = Authorize.get_jwt_subject()
+
+    if crud.rename_folder(db, user, form):
+        return {"desc": "Folder renamed"}
+    else:
+        return {"desc": "No such folder"}
 
 # Basic file operations
 

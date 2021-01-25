@@ -5,11 +5,16 @@ import models, schemas
 import hashlib
 import os
 
-def create_sharing_link(db, user, folder_name):
+# Folders
+
+def check_folder_existance():
     return 1
 
-def get_list_of_files(db, user, form):
-    folder = form.folder
+def get_list_of_folders():
+    return 1
+
+def get_folder_content(db, user, form):
+    folder = form.folder_name
     files = db.query(models.File).filter(
         models.File.username == user,
         models.File.folder == folder,
@@ -20,6 +25,28 @@ def get_list_of_files(db, user, form):
         file_names.append(file.filename)
 
     return file_names
+
+def create_folder():
+    return 1
+
+def delete_folder():
+    return 1
+
+def rename_folder():
+    return 1
+
+# Sharing link
+
+def list_shared_files():
+    return 1
+
+def download_shared_file():
+    return 1
+
+def create_sharing_link(db, user, folder_name):
+    return 1
+
+# File operations
 
 def save_files(db, user, form):
     files = form.files
@@ -73,6 +100,8 @@ def delete_file(db, user, form):
         return True
     else:
         return False
+
+# Account operations
 
 def get_user_by_username(db: Session, name: str):
     return db.query(models.User).filter(

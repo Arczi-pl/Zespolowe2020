@@ -46,6 +46,10 @@ class File(Base):
         primary_key=True,
         index=True,
     )
+    folder =  Column(
+        String(MAX_STRING_LEN),
+        index=True,
+    )
     username = Column(
         String(MAX_STRING_LEN),
         index=True,

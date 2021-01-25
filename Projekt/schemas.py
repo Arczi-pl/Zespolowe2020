@@ -35,14 +35,21 @@ class User_login(BaseModel):
 
 class Upload_files(BaseModel):
     files: List[UploadFile] = File(...)
-    folder: str
+    folder_name: str
 
 class File_access(BaseModel):
     file_name: str
-    folder: str
+    folder_name: str
 
-class Folder_access(BaseModel):
-    folder: str
+class Folder_create(BaseModel):
+    folder_name: str
+
+class Folder_delete(BaseModel):
+    folder_name: str
+
+class Folder_rename(BaseModel):
+    old_folder_name: str
+    new_folder_name: str
 
 class Create_sharing_link(BaseModel):
-    folder: str
+    folder_name: str
