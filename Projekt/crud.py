@@ -8,18 +8,23 @@ import os
 def create_sharing_link(db, user, folder_name):
     return 1
 
-def get_list_of_files(db, user):
-    files = db.query(models.File).filter(models.File.username == user).all()
+def get_list_of_files(db, user, form):
+    folder = form.folder
+    files = db.query(models.File).filter(
+        models.File.username == user,
+        models.File.folder == folder,
+    ).all()
 
-    print(files)
     file_names = []
     for file in files:
         file_names.append(file.filename)
 
     return file_names
 
-def save_files(db, user, files):
-    dir_path = 'files/' + user + '/'
+def save_files(db, user, form):
+    files = form.files
+    folder = form.folder
+    dir_path = 'files/' + user + '/' + folder + '/'
 
     if not os.path.exists(dir_path):
         os.mkdir(dir_path)
@@ -32,30 +37,36 @@ def save_files(db, user, files):
             with open(file_path, "wb+") as file_object:
                 file_object.write(uploaded_file.file.read())
 
-            print(filename)
             new_file = models.File(
-                filename = filename,
+                file_path = file_path,
                 username = user,
             )
 
             db.add(new_file)
             db.commit()
-    except Exception as e:
-        print(e)
+    except:
         return False
 
     return True
 
+def get_file(db, user, form, folder):
+    file_path = 'files/' + user + '/' + folder + '/' + form.file_path
 
-def get_file(db, user, file_path):
-    return db.query(models.File).filter(models.File.filename == file_path).first()
+    return db.query(models.File).filter(
+        models.File.file_path == file_path
+    ).first().file_path
 
-def delete_file(db, user, file_path):
-    file = db.query(models.File).filter(models.File.filename == file_path).first()
+def delete_file(db, user, form):
+    file_path = form.file_path
+    file = db.query(models.File).filter(
+        models.File.file_path == file_path
+    ).first()
+
     if file:
-        path = "files/" + user + '/' + file.filename
+        path = file.file_path
 
         os.remove(path)
+
         db.delete(file)
         db.commit()
 
@@ -68,16 +79,25 @@ def get_user_by_username(db: Session, name: str):
         or_(models.User.email == name, models.User.username == name)
     ).first()
 
-def check_user_existance(db: Session, email: str, username):
+def check_user_existance(db: Session, form):
+    email = form.email
+    username = form.username
+
     return db.query(models.User).filter(
         or_(models.User.email == email, models.User.username == username)
     ).first()
 
-def create_user(db: Session, user: schemas.User_creation):
-    hashed_password = hashlib.sha256(user.password.encode('utf-8')).hexdigest()
+def create_user(db: Session, user):
+    email = user.email
+    username = user.username
+
+    hashed_password = hashlib.sha256(
+        user.password.encode('utf-8')
+    ).hexdigest()
+
     new_user = models.User(
-        email = user.email,
-        username = user.username,
+        email = email,
+        username = username,
         password = hashed_password,
     )
 
@@ -85,15 +105,19 @@ def create_user(db: Session, user: schemas.User_creation):
     db.commit()
 
     return {
-        "email" : user.email,
-        "username" : user.username,
+        "email" : email,
+        "username" : username,
     }
 
-def create_resetting_pass_token(db: Session, email: str):
+def create_resetting_pass_token(db: Session, form):
+    email = form.email
     if not db.query(models.User).filter(models.User.email == email).first():
         return False
 
-    generated_token = hashlib.sha256((email + "Bezp5").encode('utf-8')).hexdigest()
+    generated_token = hashlib.sha256(
+        (email + "Bezp5").encode('utf-8')
+    ).hexdigest()
+
     new_token = models.Token(
         email = email,
         token = generated_token,
@@ -117,19 +141,28 @@ def create_resetting_pass_token(db: Session, email: str):
 
     return True
 
-def change_users_password(db: Session, token, new_password: str):
-    entry =  db.query(models.Token).filter(models.Token.token == token).first()
+def change_users_password(db: Session, form):
+    token = form.token
+    new_password = form.new_password
+
+    entry =  db.query(models.Token).filter(
+        models.Token.token == token
+    ).first()
     if not entry:
         return False
 
-    user = db.query(models.User).filter(models.User.email == entry.email).first()
+    user = db.query(models.User).filter(
+        models.User.email == entry.email
+    ).first()
     user.password = hashlib.sha256(new_password.encode('utf-8')).hexdigest()
 
     db.commit()
 
     return True
 
-def compare_password(db: Session, password: str, email: str):
+def compare_password(db: Session, form):
+    email = form.email
+    password = form.password
     user = get_user_by_username(db, email)
 
     if not user:

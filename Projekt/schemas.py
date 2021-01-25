@@ -2,6 +2,8 @@ from typing import List
 from pydantic import BaseModel
 from pydantic import EmailStr
 
+from fastapi import File, UploadFile
+
 import os
 from dotenv import load_dotenv, find_dotenv
 
@@ -31,5 +33,16 @@ class User_login(BaseModel):
     email: EmailStr
     password: str
 
+class Upload_files(BaseModel):
+    files: List[UploadFile] = File(...)
+    folder: str
+
 class File_access(BaseModel):
-    file_path: str
+    file_name: str
+    folder: str
+
+class Folder_access(BaseModel):
+    folder: str
+
+class Create_sharing_link(BaseModel):
+    folder: str

@@ -62,33 +62,76 @@ def authjwt_exception_handler(request: Request, exc: AuthJWTException):
         content={"detail": exc.message}
     )
 
+# Sharing link functionality
+
 @app.post("/create_sharing_link")
 def create_sharing_link(
+    form: schemas.Create_sharing_link,
     Authorize: AuthJWT = Depends(),
     db: Session = Depends(get_db),
 ):
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
 
-    return 1
+    link = crud.create_sharing_link(db, user, form)
+
+    return {"link": link}
 
 @app.get("/shared_folder/{link}")
-def get_shared_files(
+def list_shared_files(
     link: str,
     db: Session = Depends(get_db),
 ):
     return 1
 
-@app.get("/folder")
-def get_folder_content(
+@app.post("/shared_folder/{link}")
+def download_shared_file(
+    link: str,
+    form: schemas.File_access,
+    db: Session = Depends(get_db),
+):
+    return 1
+
+# List folders and their content
+
+@app.get("/folders/")
+def get_folder_list(
     Authorize: AuthJWT = Depends(),
     db: Session = Depends(get_db),
 ):
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
 
-    list_of_files = crud.get_list_of_files(db, user)
+    return 1
+
+@app.get("/folder")
+def get_folder_content(
+    form: schemas.Folder_access,
+    Authorize: AuthJWT = Depends(),
+    db: Session = Depends(get_db),
+):
+    Authorize.jwt_required()
+    user = Authorize.get_jwt_subject()
+
+    list_of_files = crud.get_list_of_files(db, user, form)
+
     return {"files": list_of_files}
+
+# Basic folder actions
+
+@app.post("/create_folder")
+def create_folder():
+    return 1
+
+@app.delete("/delete_folder")
+def delete_folder():
+    return 1
+
+@app.post("/rename_folder")
+def delete_folder():
+    return 1
+
+# Basic file operations
 
 @app.delete("/delete_file")
 def delete_file(
@@ -99,7 +142,7 @@ def delete_file(
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
 
-    if crud.delete_file(db, user, form.file_path):
+    if crud.delete_file(db, user, form):
         return {"desc": "File successfully deleted"}
     else:
         return {"desc": "Such file didn't exist"}
@@ -113,26 +156,25 @@ def download_file(
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
 
-    path = form.file_path
-    file = crud.get_file(db, user, path)
-    if not file:
+    file_path = crud.get_file(db, user, form)
+    if not file_path:
         raise HTTPException(
             status_code=400,
             detail="Such file doesn't exist"
         )
 
-    return FileResponse('files/' + user + '/' + path)
+    return FileResponse(file_path)
 
 @app.post("/upload_file")
 def upload_file(
-    files: List[UploadFile] = File(...),
+    upload_form: schemas.Upload_files,
     Authorize: AuthJWT = Depends(),
     db: Session = Depends(get_db),
 ):
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
 
-    if not crud.save_files(db, user, files):
+    if not crud.save_files(db, user, upload_form):
         raise HTTPException(
             status_code=400,
             detail="Problem with uploading"
@@ -140,12 +182,14 @@ def upload_file(
 
     return {"desc": "Files successfully saved"}
 
+# Account actions
+
 @app.post("/reset_password")
 def create_resetting_pass_token(
     request: schemas.Reset_pass_request,
     db: Session = Depends(get_db),
 ):
-    if not crud.create_resetting_pass_token(db, request.email):
+    if not crud.create_resetting_pass_token(db, request):
         raise HTTPException(status_code=400, detail="Incorrect username")
 
     return {"desc": "Check your email"}
@@ -155,7 +199,7 @@ def change_users_password(
     request: schemas.Reset_pass_form,
     db: Session = Depends(get_db),
 ):
-    return crud.change_users_password(db, request.token, request.new_password)
+    return crud.change_users_password(db, request)
 
 @app.post('/login')
 def login(
@@ -163,7 +207,7 @@ def login(
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
 ):
-    status = crud.compare_password(db, form_data.password, form_data.email)
+    status = crud.compare_password(db, form_data)
 
     if not status:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
@@ -178,15 +222,16 @@ def login(
 
 @app.post("/register")
 def create_user(
-    user: schemas.User_creation,
+    form: schemas.User_creation,
     db: Session = Depends(get_db),
 ):
-    user_exists = crud.check_user_existance(db, user.email, user.username)
+    user_exists = crud.check_user_existance(db, form)
 
     if user_exists:
         raise HTTPException(status_code=400, detail="Username already registered")
 
-    new_user = crud.create_user(db, user)
+    new_user = crud.create_user(db, form)
+
     return new_user
 
 @app.post('/refresh_jwt')
@@ -194,6 +239,7 @@ def refresh_jwt_token(Authorize: AuthJWT = Depends()):
     Authorize.jwt_refresh_token_required()
     current_user = Authorize.get_jwt_subject()
     new_access_token = Authorize.create_access_token(subject=current_user)
+
     return {"access_token": new_access_token}
 
 @app.get("/")
