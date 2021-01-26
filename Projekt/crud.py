@@ -4,6 +4,9 @@ from sqlalchemy import or_
 import models, schemas
 import hashlib
 import os
+import jwt
+
+secret = os.environ.get("KEY")
 
 # Folders
 
@@ -92,14 +95,30 @@ def rename_folder(db, user, form):
 
 # Sharing link
 
-def list_shared_files():
-    return 1
+def list_shared_files(db, link):
+    folder = jwt.decode(link, secret, algorithms=["HS256"]).subject
+    return get_folder_content(db, folder)
 
-def download_shared_file():
-    return 1
+def download_shared_file(db, link, form):
+    user = jwt.decode(link, secret, algorithms=["HS256"]).subject
+    file_name = form.file_name
+    file_path = 'files/' + user + '/' + file_name
 
-def create_sharing_link(db, user, folder_name):
-    return 1
+    return db.query(models.File).filter(
+        models.File.file_path == file_path
+    ).first().file_path
+
+def create_sharing_link(db, user, form):
+    # folder = form.folder_name
+    folder = user
+    sharing_link = jwt.encode({"subject": folder}, secret, algorithm = "HS256")
+
+    return sharing_link
+    # if check_folder_existance(db, user, folder):
+    #     sharing_link = jwt.encode({"subject": folder}, secret, algorithm = "HS256")
+    #     return sharing_link
+    # else:
+    #     return False
 
 # File operations
 

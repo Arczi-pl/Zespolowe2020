@@ -75,16 +75,34 @@ def create_sharing_link(
 
     link = crud.create_sharing_link(db, user, form)
 
-    return {"link": link}
+    if link:
+        return {"link": link}
+    else:
+        return {"desc": "You don't have such folder"}
 
 @app.get("/shared_folder/{link}")
 def list_shared_files(
     link: str,
     db: Session = Depends(get_db),
 ):
-    shared_files = []
+    shared_files = crud.list_shared_files(db, link)
 
     return {"Shared files": shared_files}
+
+@app.get("/download_shared_file/{link}")
+def download_shared_file(
+    link: str,
+    form: schemas.File_download,
+    db: Session = Depends(get_db),
+):
+    file_path = crud.download_shared_file(db, user, form)
+    if not file_path:
+        raise HTTPException(
+            status_code=400,
+            detail="Such file doesn't exist"
+        )
+
+    return FileResponse(file_path)
 
 # List folders and their content
 
