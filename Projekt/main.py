@@ -86,14 +86,6 @@ def list_shared_files(
 
     return {"Shared files": shared_files}
 
-@app.post("/shared_folder/{link}")
-def download_shared_file(
-    link: str,
-    form: schemas.File_access,
-    db: Session = Depends(get_db),
-):
-    return crud.change_users_password
-
 # List folders and their content
 
 @app.get("/folders/")
@@ -110,14 +102,14 @@ def get_folder_list(
 
 @app.get("/folder")
 def get_folder_content(
-    form: schemas.Folder_access,
+    # folder: str,
     Authorize: AuthJWT = Depends(),
     db: Session = Depends(get_db),
 ):
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
 
-    list_of_files = crud.get_list_of_files(db, user, form)
+    list_of_files = crud.get_folder_content(db, user)
 
     return {"files": list_of_files}
 
@@ -169,7 +161,7 @@ def rename_folder(
 
 @app.delete("/delete_file")
 def delete_file(
-    form: schemas.File_access,
+    form: schemas.File_delete,
     Authorize: AuthJWT = Depends(),
     db: Session = Depends(get_db),
 ):
@@ -181,9 +173,23 @@ def delete_file(
     else:
         return {"desc": "Such file didn't exist"}
 
+@app.delete("/rename_file")
+def rename_file(
+    form: schemas.File_rename,
+    Authorize: AuthJWT = Depends(),
+    db: Session = Depends(get_db),
+):
+    Authorize.jwt_required()
+    user = Authorize.get_jwt_subject()
+
+    if crud.rename_file(db, user, form):
+        return {"desc": "File successfully renamed"}
+    else:
+        return {"desc": "Such file didn't exist"}
+
 @app.post("/download_file")
 def download_file(
-    form: schemas.File_access,
+    form: schemas.File_download,
     Authorize: AuthJWT = Depends(),
     db: Session = Depends(get_db),
 ):
@@ -201,14 +207,14 @@ def download_file(
 
 @app.post("/upload_file")
 def upload_file(
-    upload_form: schemas.Upload_files,
+    files: List[UploadFile] = File(...),
     Authorize: AuthJWT = Depends(),
     db: Session = Depends(get_db),
 ):
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
 
-    if not crud.save_files(db, user, upload_form):
+    if not crud.save_files(db, user, files):
         raise HTTPException(
             status_code=400,
             detail="Problem with uploading"

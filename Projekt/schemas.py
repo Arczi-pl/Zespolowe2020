@@ -33,13 +33,15 @@ class User_login(BaseModel):
     email: EmailStr
     password: str
 
-class Upload_files(BaseModel):
-    files: List[UploadFile] = File(...)
-    folder_name: str
-
-class File_access(BaseModel):
+class File_download(BaseModel):
     file_name: str
-    folder_name: str
+
+class File_delete(BaseModel):
+    file_name: str
+
+class File_rename(BaseModel):
+    old_file_name: str
+    new_file_name: str
 
 class Folder_create(BaseModel):
     folder_name: str

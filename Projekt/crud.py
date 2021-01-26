@@ -7,17 +7,26 @@ import os
 
 # Folders
 
-def check_folder_existance():
-    return 1
+def check_folder_existance(db, user, folder_name):
+    return db.query(models.Folder).filter(
+        models.Folder.username == user,
+        models.Folder.name == folder_name,
+    ).first()
 
-def get_list_of_folders():
-    return 1
+def get_list_of_folders(db, user):
+    folders = db.query(models.Folder).filter(
+        models.Folder.username == user,
+    ).all()
 
-def get_folder_content(db, user, form):
-    folder = form.folder_name
+    folder_names = []
+    for folder in folders:
+        folder_names.append(folder.name)
+
+    return folder_names
+
+def get_folder_content(db, user):
     files = db.query(models.File).filter(
         models.File.username == user,
-        models.File.folder == folder,
     ).all()
 
     file_names = []
@@ -26,14 +35,60 @@ def get_folder_content(db, user, form):
 
     return file_names
 
-def create_folder():
-    return 1
+def create_folder(db, user, form):
+    folder_name = form.folder_name
 
-def delete_folder():
-    return 1
+    new_folder = models.Folder(
+        username = user,
+        name = folder_name,
+    )
 
-def rename_folder():
-    return 1
+    try:
+        db.add(new_folder)
+        db.commit()
+    except Exception as e:
+        print(e)
+        return False
+
+    return True
+
+def delete_folder(db, user, form):
+    folder_name = form.folder_name
+    folder = db.query(models.Folder).filter(
+        models.Folder.username == user,
+        models.Folder.name == folder_name,
+    ).first()
+
+    try:
+        db.delete(folder)
+        db.commit()
+    except:
+        return False
+
+    return True
+
+def rename_folder(db, user, form):
+    new_folder_name = form.new_folder_name
+    old_folder_name = form.old_folder_name
+    folder = db.query(models.Folder).filter(
+        models.Folder.name == old_folder_name
+    ).first()
+
+    if not folder:
+        return False
+
+    try:
+        folder.name = new_folder_name
+
+        old_path = 'files/' + old_folder_name
+        new_path = 'files/' + new_folder_name
+        os.rename(old_path, new_path)
+
+        db.commit()
+    except:
+        return False
+
+    return True
 
 # Sharing link
 
@@ -48,10 +103,8 @@ def create_sharing_link(db, user, folder_name):
 
 # File operations
 
-def save_files(db, user, form):
-    files = form.files
-    folder = form.folder
-    dir_path = 'files/' + user + '/' + folder + '/'
+def save_files(db, user, files):
+    dir_path = 'files/' + user + '/'
 
     if not os.path.exists(dir_path):
         os.mkdir(dir_path)
@@ -77,14 +130,15 @@ def save_files(db, user, form):
     return True
 
 def get_file(db, user, form, folder):
-    file_path = 'files/' + user + '/' + folder + '/' + form.file_path
+    file_path = 'files/' + user + '/' + form.file_name
 
     return db.query(models.File).filter(
         models.File.file_path == file_path
     ).first().file_path
 
 def delete_file(db, user, form):
-    file_path = form.file_path
+    file_name = form.file_name
+    file_path = 'files/' + user + '/' + file_name
     file = db.query(models.File).filter(
         models.File.file_path == file_path
     ).first()
@@ -92,10 +146,39 @@ def delete_file(db, user, form):
     if file:
         path = file.file_path
 
-        os.remove(path)
+        try:
+            os.remove(path)
 
-        db.delete(file)
-        db.commit()
+            db.delete(file)
+            db.commit()
+        except:
+            return False
+
+        return True
+    else:
+        return False
+
+def rename_file(db, user, form):
+    old_file_name = form.old_file_name
+    new_file_name = form.new_file_name
+    dir_path = 'files/' + user + '/' + old_file_name
+    old_path = dir_path + old_file_name
+    new_path = dir_path + new_file_name
+
+    file = db.query(models.File).filter(
+        models.File.file_path == old_file_path
+    ).first()
+
+    if file:
+        path = file.file_path
+
+        try:
+            file.file_path = new_file_path
+            os.rename(old_file_path, new_file_path)
+
+            db.commit()
+        except:
+            return False
 
         return True
     else:

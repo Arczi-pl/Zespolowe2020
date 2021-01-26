@@ -46,16 +46,12 @@ class File(Base):
         primary_key=True,
         index=True,
     )
-    folder =  Column(
-        String(MAX_STRING_LEN),
-        index=True,
-    )
     username = Column(
         String(MAX_STRING_LEN),
         index=True,
     )
 
-class Folders(Base):
+class Folder(Base):
     __tablename__ = "folders"
 
     username = Column(
@@ -63,7 +59,7 @@ class Folders(Base):
         primary_key=True,
         index=True,
     )
-    folder = Column(
+    name = Column(
         String(MAX_STRING_LEN),
         primary_key=True,
         index=True,
