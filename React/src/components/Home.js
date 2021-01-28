@@ -5,63 +5,65 @@ import send6 from './send6.png';
 
 const Home = () => {
   return (
-        <div className="container-login100">
-          <div className="wrap-login100">
-            
-            <form className="login100-form validate-form">
-              <span className="login100-form-title">
-                Zaloguj się
-              </span>
+    <div className="limiter">
+    <div className="container-login100">
+      <div className="wrap-login100">
+        
+        <form className="login100-form validate-form">
+          <span className="login100-form-title">
+            Zaloguj się
+          </span>
 
-              <div id="error_msg"></div>
-              <div className="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-                <input className="input100" type="text" name="email" placeholder="Email" id="email"/>
-                <span className="focus-input100"></span>
-                <span className="symbol-input100">
-                  <i className="fa fa-envelope" aria-hidden="true"></i>
-                </span>
-              </div>
-
-              <div className="wrap-input100 validate-input" data-validate = "Password is required">
-                <input className="input100" type="password" name="pass" placeholder="Hasło" id="password"/>
-                <span className="focus-input100"></span>
-                <span className="symbol-input100">
-                  <i className="fa fa-lock" aria-hidden="true"></i>
-                </span>
-              </div>
-              
-              <div className="container-login100-form-btn">
-                <button className="login100-form-btn" onClick={loginSubmit}>
-                  Zaloguj
-                </button>
-              </div>
-
-              <div className="text-center p-t-12">
-                <span className="txt1">
-                  Zapomniałem <span style={{color: "rgba(0, 0, 0, 0)"}}>.</span>
-                </span>
-                <a onClick={passwordResetSubmit} className="txt2" href="#">
-                   loginu / hasła?
-                </a>
-              </div>
-
-              <div className="text-center p-t-136">
-                <a className="txt2" href="#" onClick={registerSubmit}>
-                  Utwórz konto
-                  <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
-                </a>
-              </div>
-            </form>
-            
-
-            <div>
-            <a onClick={noLoginSendSubmit} href ="#"><span className="login100-form-title">Lub przesyłaj bez logowania</span>
-            <Tilt className="Tilt">
-            <div className="login100-pic js-tilt"><img src={send6}  alt="IMG"/></div>         
-            </Tilt></a>
+          <div id="error_msg"></div>
+          <div className="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
+            <input className="input100" type="text" name="email" placeholder="Email" id="email"/>
+            <span className="focus-input100"></span>
+            <span className="symbol-input100">
+              <i className="fa fa-envelope" aria-hidden="true"></i>
+            </span>
           </div>
+
+          <div className="wrap-input100 validate-input" data-validate = "Password is required">
+            <input className="input100" type="password" name="pass" placeholder="Hasło" id="password"/>
+            <span className="focus-input100"></span>
+            <span className="symbol-input100">
+              <i className="fa fa-lock" aria-hidden="true"></i>
+            </span>
           </div>
-        </div>
+          
+          <div className="container-login100-form-btn">
+            <button className="login100-form-btn" onClick={loginSubmit}>
+              Zaloguj
+            </button>
+          </div>
+
+          <div className="text-center p-t-12">
+            <span className="txt1">
+              Zapomniałem <span style={{color: "rgba(0, 0, 0, 0)"}}>.</span>
+            </span>
+            <a  onClick={passwordResetSubmit} className="txt2" href="#">
+               loginu / hasła?
+            </a>
+          </div>
+
+          <div className="text-center p-t-136">
+            <a className="txt2" href="#" onClick={registerSubmit}>
+              Utwórz konto
+              <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+            </a>
+          </div>
+        </form>
+        
+
+        <div>
+        <a onClick={noLoginSendSubmit} href ="#"><span className="login100-form-title">Lub przesyłaj bez logowania</span>
+        <Tilt className="Tilt">
+        <div className="login100-pic js-tilt"><img src={send6}  alt="IMG"/></div>         
+        </Tilt></a>
+      </div>
+      </div>
+    </div>
+  </div>
   );
 }
 
@@ -70,15 +72,20 @@ function loginSubmit(){
 }
 
 function registerSubmit(){
-  window.alert("Rejestracja")
+  let path = `/register`; 
+  window.location.href= path
 }
 
 function noLoginSendSubmit(){
+  let path = `/`; 
+  window.location.href= path
   window.alert("Bez logowania")
 
 }
 
 function passwordResetSubmit(){
+  let path = `/`; 
+  window.location.href= path
   window.alert("Reset hasła")
 }
 export default Home;

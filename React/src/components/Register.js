@@ -5,8 +5,9 @@ import send6 from './send6.png';
 
 const Register = () => {
   return (
-        <div className="container-login100">
-          <div className="wrap-login100">
+    <div className="limiter">
+    <div className="container-login100">
+      <div className="wrap-login100">
             
             <form className="login100-form validate-form">
               <span className="login100-form-title">
@@ -67,6 +68,8 @@ const Register = () => {
           
           </div>
         </div>
+        </div>
+
   );
 }
 
