@@ -45,7 +45,7 @@ const Register = () => {
               </div>
               
               <div className="container-login100-form-btn">
-                <button className="login100-form-btn" onClick={registerSubmit}>
+                <button className="login100-form-btn" type="button" onClick={registerSubmit}>
                   Zarejestruj
                 </button>
               </div>
@@ -86,6 +86,12 @@ function goHomeSubmit(){
 function registerSubmit(){
   window.alert("Zarejestruj")
 
+  let data = {"email":document.getElementById("email").value,"username":document.getElementById("username").value,"password":document.getElementById("password").value};
+
+  fetch('http://localhost:8080/register', {
+       method: 'POST',
+       body: JSON.stringify(data),
+    });
 }
 
 export default Register;
