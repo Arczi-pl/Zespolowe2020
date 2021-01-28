@@ -1,7 +1,13 @@
 import React from 'react';
 import Tilt from 'react-tilt';
+import ReactDOM from 'react-dom';
+import Cookies from 'universal-cookie';
+
 //Obrazy
 import send6 from './send6.png';
+
+const cookies = new Cookies();
+
 
 const Home = () => {
   return (
@@ -67,8 +73,52 @@ const Home = () => {
   );
 }
 
+async function fetchLogin() {
+  var formData = new FormData()
+  formData.append('emial', document.getElementById("email").value);
+  formData.append('password', document.getElementById("password").value);
+
+  var requestOptions = {
+       method: 'POST',
+       headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: formData
+    };
+
+  
+  const response = await fetch('/login' ,requestOptions)
+  .catch((error) => {
+    window.alert('Error:', error);
+  });
+  return response
+}
+
+
 function loginSubmit(){
   window.alert("Logowanie")
+
+  var payload = {email: document.getElementById("email").value,
+    password: document.getElementById("password").value}
+
+  var requestOptions = {
+       method: 'POST',
+       headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload)
+    };
+
+  fetch('/login' ,requestOptions)
+  .then(function(response) {
+    return response.json();
+  }).then(function(json) {
+    window.alert(json)
+    }).catch(function(err) {
+    window.alert(err.message);
+  });
 }
 
 function registerSubmit(){
@@ -78,8 +128,8 @@ function registerSubmit(){
 
 function noLoginSendSubmit(){
   let path = `/`; 
-  window.location.href= path
-  window.alert("Bez logowania")
+  window.location.href= path;
+  window.alert("Bez logowania");
 
 }
 
