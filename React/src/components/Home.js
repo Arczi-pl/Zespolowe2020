@@ -124,12 +124,11 @@ function registerSubmit(){
 }
 
 function noLoginSendSubmit(){
-  window.alert("Bez logowania");
+  window.alert("Wysyłanie bez logowania");
 
 }
 
 function passwordResetSubmit(){
-
-  window.alert("Reset hasła")
+  window.alert("Reset hasła: jakiś MIMEText niezdefiniowany na serwerze ;/")
 }
 export default Home;

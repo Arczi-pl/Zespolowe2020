@@ -1,6 +1,7 @@
 import React from 'react';
 import Tilt from 'react-tilt';
 import Cookies from 'universal-cookie';
+import ReactDOM from 'react-dom';
 
 //Obrazy
 import send6 from './send6.png';
@@ -30,6 +31,8 @@ const Main = () => {
               Prześlij
             </button>
           </div>
+          <div id="error_msg"></div>
+
 
 
           <div className="text-center p-t-136">
@@ -67,7 +70,61 @@ function goHomeSubmit(){
 }
 
 function uploadFileSubmit(){
-    window.alert("Wyślij plik");
+  const my_file = document.getElementById("fileinput")
+  const plik = new Blob([my_file.files[0]], {type: my_file.files[0].type})
+  const filename = my_file.value.split(/[\s\\]+/).pop();
+  const data = new FormData()
+  data.append("files", plik, filename);
+
+  var url = "/upload_file";
+  var fetchOpiotns = {
+    method: "POST",
+    headers: {
+      'Accept': 'application/json',
+      "Authorization": "Bearer " + getCookie("access_token")
+    },
+    body: data
+    
+  };
+
+  fetch(url, fetchOpiotns)
+  .then(function(res){ 
+    return res.json(); })
+  .then(function(data){ 
+    var json = JSON.stringify(data);
+    var obj = JSON.parse(json)
+    //TODO: To by można ulepszyć :/
+    if(obj.hasOwnProperty('detail')){
+      ReactDOM.render(
+        <span style={{color: "red"}}>Na serwerze jest plik o takiej nazwie</span>,
+        document.getElementById('error_msg')
+      );}
+
+    else if(obj.hasOwnProperty('desc')){
+      ReactDOM.render(
+        <span style={{color: "green"}}>Plik dodany na serwer</span>,
+        document.getElementById('error_msg')
+      );}
+    
+  })
+  .catch(function(err) {
+    alert("ERROR: " + err)  
+  })
 }
 
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
 export default Main;
