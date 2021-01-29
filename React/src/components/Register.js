@@ -106,6 +106,12 @@ function registerSubmit(){
     let path = "/"; 
     window.location.href= path;
 
+  let data = {"email":document.getElementById("email").value,"username":document.getElementById("username").value,"password":document.getElementById("password").value};
+
+  fetch('http://localhost:8080/register', {
+       method: 'POST',
+       body: JSON.stringify(data),
+    });
 }
 
 export default Register;
