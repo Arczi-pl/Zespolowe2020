@@ -9,6 +9,7 @@ import {
 
 import Home from './components/Home';
 import Register from './components/Register';
+import Main from './components/Main';
 
 class App extends Component {
   render() {
@@ -17,6 +18,8 @@ class App extends Component {
         <div>
           <Route exact path="/" component={Home} />
           <Route path="/register" component={Register} />
+          <Route path="/main" component={Main} />
+
         </div>
       </Router>
     );

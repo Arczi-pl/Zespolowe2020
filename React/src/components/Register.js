@@ -45,7 +45,7 @@ const Register = () => {
               </div>
               
               <div className="container-login100-form-btn">
-                <button className="login100-form-btn" onClick={registerSubmit}>
+                <button className="login100-form-btn" type="button" onClick={registerSubmit}>
                   Zarejestruj
                 </button>
               </div>
@@ -60,7 +60,7 @@ const Register = () => {
             </form>
 
             <div>
-            <a onClick={noLoginSendSubmit} href ="#"><span className="login100-form-title">Lub przesyłaj bez logowania</span>
+            <a onClick={noLoginSendSubmit} href =""><span className="login100-form-title">Lub przesyłaj bez logowania</span>
             <Tilt className="Tilt">
             <div className="login100-pic js-tilt"><img src={send6}  alt="IMG"/></div>         
             </Tilt></a>
@@ -79,12 +79,32 @@ function noLoginSendSubmit(){
 }
 
 function goHomeSubmit(){
-  window.alert("Do Home")
-
+  let path = "/"; 
+  window.location.href= path;
 }
 
 function registerSubmit(){
-  window.alert("Zarejestruj")
+
+  let payload = {"email":document.getElementById("email").value,
+  "username":document.getElementById("username").value,
+  "password":document.getElementById("password").value};
+
+  let url = "/register";
+
+  let fetchOptions = {
+    method: "POST",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload)
+    }
+
+    fetch(url, fetchOptions)
+    //TODO: Obsługa błedów (patrz Home.js)
+
+    let path = "/"; 
+    window.location.href= path;
 
 }
 

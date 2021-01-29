@@ -38,17 +38,17 @@ const Home = () => {
           </div>
           
           <div className="container-login100-form-btn">
-            <button className="login100-form-btn" onClick={loginSubmit}>
+            <button className="login100-form-btn" type="button" onClick={loginSubmit}>
               Zaloguj
             </button>
           </div>
 
           <div className="text-center p-t-12">
+            
+            <a  type="button" onClick={passwordResetSubmit} className="txt2" href="">
             <span className="txt1">
-              Zapomniałem <span style={{color: "rgba(0, 0, 0, 0)"}}>.</span>
+              Nie pamiętasz hasła? <span style={{color: "rgba(0, 0, 0, 0)"}}>.</span>
             </span>
-            <a  onClick={passwordResetSubmit} className="txt2" href="#">
-               loginu / hasła?
             </a>
           </div>
 
@@ -62,7 +62,7 @@ const Home = () => {
         
 
         <div>
-        <a onClick={noLoginSendSubmit} href ="#"><span className="login100-form-title">Lub przesyłaj bez logowania</span>
+        <a onClick={noLoginSendSubmit} href =""><span className="login100-form-title">Lub przesyłaj bez logowania</span>
         <Tilt className="Tilt">
         <div className="login100-pic js-tilt"><img src={send6}  alt="IMG"/></div>         
         </Tilt></a>
@@ -73,52 +73,49 @@ const Home = () => {
   );
 }
 
-async function fetchLogin() {
-  var formData = new FormData()
-  formData.append('emial', document.getElementById("email").value);
-  formData.append('password', document.getElementById("password").value);
-
-  var requestOptions = {
-       method: 'POST',
-       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: formData
-    };
-
-  
-  const response = await fetch('/login' ,requestOptions)
-  .catch((error) => {
-    window.alert('Error:', error);
-  });
-  return response
-}
 
 
-function loginSubmit(){
-  window.alert("Logowanie")
-
-  var payload = {email: document.getElementById("email").value,
+function loginSubmit(){  
+  let payload = {email: document.getElementById("email").value,
     password: document.getElementById("password").value}
 
-  var requestOptions = {
-       method: 'POST',
-       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload)
-    };
+  let url = "/login";
 
-  fetch('/login' ,requestOptions)
-  .then(function(response) {
-    return response.json();
-  }).then(function(json) {
-    window.alert(json)
-    }).catch(function(err) {
-    window.alert(err.message);
-  });
+  let fetchOptions = {
+    method: "POST",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload)
+    }
+
+    fetch(url, fetchOptions)
+    .then(function(res){ 
+      return res.json(); })
+    .then(function(data){ 
+      var json = JSON.stringify(data)
+      var obj = JSON.parse(json)
+
+      if(obj.hasOwnProperty('detail')){
+        ReactDOM.render(
+          <span style={{color: "red"}}>Nieprawidłowy login lub hasło</span>,
+          document.getElementById('error_msg')
+        );
+      }
+      else if(obj.hasOwnProperty("access_token")){
+        const cookies = new Cookies();
+        cookies.set("access_token", obj.access_token);
+        cookies.set("refresh_token", obj.refresh_token);
+        let path = `/main`; 
+        window.location.href= path;
+      }
+
+
+    })
+ 
+
+
 }
 
 function registerSubmit(){
@@ -127,15 +124,12 @@ function registerSubmit(){
 }
 
 function noLoginSendSubmit(){
-  let path = `/`; 
-  window.location.href= path;
   window.alert("Bez logowania");
 
 }
 
 function passwordResetSubmit(){
-  let path = `/`; 
-  window.location.href= path
+
   window.alert("Reset hasła")
 }
 export default Home;
