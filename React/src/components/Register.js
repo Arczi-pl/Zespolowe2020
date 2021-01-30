@@ -25,7 +25,7 @@ const Register = () => {
                 <input className="input100" type="text" name="username" placeholder="Użytkownik" id="username"/>
                 <span className="focus-input100"></span>
                 <span className="symbol-input100">
-                  <i className="fa fa-envelope" aria-hidden="true"></i>
+                  <i className="fa fa-user" aria-hidden="true"></i>
                 </span>
               </div>
 

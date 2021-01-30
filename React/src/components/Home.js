@@ -62,7 +62,7 @@ const Home = () => {
         
 
         <div>
-        <a onClick={noLoginSendSubmit} href =""><span className="login100-form-title">Lub przesyłaj bez logowania</span>
+        <a href ="/nologin"><span className="login100-form-title">Lub przesyłaj bez logowania</span>
         <Tilt className="Tilt">
         <div className="login100-pic js-tilt"><img src={send6}  alt="IMG"/></div>         
         </Tilt></a>
@@ -76,6 +76,7 @@ const Home = () => {
 
 
 function loginSubmit(){  
+  alert("Hi")
   let payload = {email: document.getElementById("email").value,
     password: document.getElementById("password").value}
 
@@ -121,11 +122,6 @@ function loginSubmit(){
 function registerSubmit(){
   let path = `/register`; 
   window.location.href= path
-}
-
-function noLoginSendSubmit(){
-  window.alert("Wysyłanie bez logowania");
-
 }
 
 function passwordResetSubmit(){
