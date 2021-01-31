@@ -1,5 +1,5 @@
 # Zespolowe2020
-Projekt na przedmiot Programowanie Zespołowe na Politechnice Wrocławskiej
+Projekt na kurs Programowanie Zespołowe na Politechnice Wrocławskiej
 
 Temat: Mini serwis hostingu plików wraz z możliwością prostego przesyłu i synchronizacji plików pomiędzy urządzeniami.
 
@@ -13,7 +13,7 @@ Piotr Piszczek
 
 Wstępne założenia:
 
-Backend - python + django 
+Backend - python 
 
 Frontend - js + electron + react 
 
