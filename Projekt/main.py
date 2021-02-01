@@ -95,7 +95,7 @@ def download_shared_file(
     form: schemas.File_download,
     db: Session = Depends(get_db),
 ):
-    file_path = crud.download_shared_file(db, user, form)
+    file_path = crud.download_shared_file(db, user, form, link)
     if not file_path:
         raise HTTPException(
             status_code=400,
@@ -118,16 +118,16 @@ def get_folder_list(
 
     return {"Folders": folders}
 
-@app.get("/folder")
+@app.get("/folder/{folder_name}")
 def get_folder_content(
-    # folder: str,
+    folder_name: str,
     Authorize: AuthJWT = Depends(),
     db: Session = Depends(get_db),
 ):
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
 
-    list_of_files = crud.get_folder_content(db, user)
+    list_of_files = crud.get_folder_content(db, user, folder_name)
 
     return {"files": list_of_files}
 
@@ -161,7 +161,7 @@ def delete_folder(
     else:
         return {"desc": "Such folder didn't exist"}
 
-@app.post("/rename_folder")
+@app.post("/rename_folder/{folder_name}")
 def rename_folder(
     form: schemas.Folder_rename,
     Authorize: AuthJWT = Depends(),
@@ -177,8 +177,9 @@ def rename_folder(
 
 # Basic file operations
 
-@app.delete("/delete_file")
+@app.delete("/delete_file/{folder_name}")
 def delete_file(
+    folder_name: str,
     form: schemas.File_delete,
     Authorize: AuthJWT = Depends(),
     db: Session = Depends(get_db),
@@ -186,13 +187,14 @@ def delete_file(
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
 
-    if crud.delete_file(db, user, form):
+    if crud.delete_file(db, user, form, folder_name):
         return {"desc": "File successfully deleted"}
     else:
         return {"desc": "Such file didn't exist"}
 
-@app.delete("/rename_file")
+@app.delete("/rename_file/{folder_name}")
 def rename_file(
+    folder_name: str,
     form: schemas.File_rename,
     Authorize: AuthJWT = Depends(),
     db: Session = Depends(get_db),
@@ -200,13 +202,14 @@ def rename_file(
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
 
-    if crud.rename_file(db, user, form):
+    if crud.rename_file(db, user, form, folder_name):
         return {"desc": "File successfully renamed"}
     else:
         return {"desc": "Such file didn't exist"}
 
-@app.post("/download_file")
+@app.post("/download_file/{folder_name}")
 def download_file(
+    folder_name: str,
     form: schemas.File_download,
     Authorize: AuthJWT = Depends(),
     db: Session = Depends(get_db),
@@ -214,7 +217,7 @@ def download_file(
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
 
-    file_path = crud.get_file(db, user, form)
+    file_path = crud.download_file(db, user, form, folder_name)
     if not file_path:
         raise HTTPException(
             status_code=400,
@@ -223,16 +226,16 @@ def download_file(
 
     return FileResponse(file_path)
 
-@app.post("/upload_file")
+@app.post("/upload_file/{folder_name}")
 def upload_file(
+    folder_name: str,
     files: List[UploadFile] = File(...),
     Authorize: AuthJWT = Depends(),
     db: Session = Depends(get_db),
 ):
     Authorize.jwt_required()
     user = Authorize.get_jwt_subject()
-
-    if not crud.save_files(db, user, files):
+    if not crud.save_files(db, user, files, folder_name):
         raise HTTPException(
             status_code=400,
             detail="Problem with uploading"

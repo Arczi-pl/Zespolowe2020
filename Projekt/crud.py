@@ -27,14 +27,15 @@ def get_list_of_folders(db, user):
 
     return folder_names
 
-def get_folder_content(db, user):
+def get_folder_content(db, user, folder):
     files = db.query(models.File).filter(
         models.File.username == user,
+        models.File.folder == folder,
     ).all()
 
     file_names = []
     for file in files:
-        file_names.append(file.filename)
+        file_names.append(file.file_name)
 
     return file_names
 
@@ -47,6 +48,9 @@ def create_folder(db, user, form):
     )
 
     try:
+        path = os.path.join('files', user, folder_name)
+        os.makedirs(path)
+
         db.add(new_folder)
         db.commit()
     except Exception as e:
@@ -63,6 +67,19 @@ def delete_folder(db, user, form):
     ).first()
 
     try:
+        path = os.path.join('files', user, folder)
+
+        files = db.query(models.File).filter(
+            models.File.username == user,
+            models.File.folder == folder,
+        ).all()
+
+        for file in files:
+            os.remove(os.path.join(path, file.file_name))
+            db.delete(file)
+
+        os.remove(path)
+
         db.delete(folder)
         db.commit()
     except:
@@ -73,8 +90,10 @@ def delete_folder(db, user, form):
 def rename_folder(db, user, form):
     new_folder_name = form.new_folder_name
     old_folder_name = form.old_folder_name
+
     folder = db.query(models.Folder).filter(
-        models.Folder.name == old_folder_name
+        models.Folder.username == user,
+        models.Folder.name == old_folder_name,
     ).first()
 
     if not folder:
@@ -83,9 +102,17 @@ def rename_folder(db, user, form):
     try:
         folder.name = new_folder_name
 
-        old_path = 'files/' + old_folder_name
-        new_path = 'files/' + new_folder_name
+        old_path = os.path.join('files', user, old_folder_name)
+        new_path = os.path.join('files', user, new_folder_name)
         os.rename(old_path, new_path)
+
+        files = db.query(models.File).filter(
+            models.File.username == user,
+            models.File.folder == old_folder_name,
+        ).all()
+
+        for file in files:
+            file.folder = new_folder_name
 
         db.commit()
     except:
@@ -97,83 +124,99 @@ def rename_folder(db, user, form):
 
 def list_shared_files(db, link):
     try:
-        folder = jwt.decode(link, secret, algorithms=["HS256"]).subject
+        (user, folder) = jwt.decode(link, secret, algorithms=["HS256"]).subject
     except:
         return False
-    return get_folder_content(db, folder)
+
+    return get_folder_content(db, user, folder)
 
 def download_shared_file(db, link, form):
     try:
-        user = jwt.decode(link, secret, algorithms=["HS256"]).subject
+        (user, folder) = jwt.decode(link, secret, algorithms=["HS256"]).subject
     except:
         return False
-    file_name = form.file_name
-    file_path = 'files/' + user + '/' + file_name
 
-    return db.query(models.File).filter(
-        models.File.file_path == file_path
-    ).first().file_path
+    file_name = form.file_name
+
+    if check_file_existance(db, user, folder, file_name):
+        return os.path.join('files', user, folder, file_name)
+    else:
+        return False
 
 def create_sharing_link(db, user, form):
-    # folder = form.folder_name
-    folder = user
-    sharing_link = jwt.encode(
-        {"subject": folder, "exp": datetime.utcnow()},
-        secret,
-        algorithm = "HS256"
-    )
+    folder = form.folder_name
 
-    return sharing_link
-    # if check_folder_existance(db, user, folder):
-    #     sharing_link = jwt.encode({"subject": folder}, secret, algorithm = "HS256")
-    #     return sharing_link
-    # else:
-    #     return False
+    if check_folder_existance(db, user, folder):
+        sharing_link = jwt.encode(
+            {"subject": [user, folder], "exp": datetime.utcnow()},
+            secret,
+            algorithm = "HS256"
+        )
+
+        return sharing_link
+    else:
+        return False
 
 # File operations
 
-def save_files(db, user, files):
-    dir_path = 'files/' + user + '/'
+def check_file_existance(db, user, folder, name):
+    return db.query(models.File).filter(
+        models.File.username == user,
+        models.File.folder == folder,
+        models.File.file_name == name,
+    ).first()
+
+def save_files(db, user, files, folder):
+    dir_path = os.path.join('files', user, folder)
 
     if not os.path.exists(dir_path):
-        os.mkdir(dir_path)
+        try:
+            form = schemas.Folder_create
+            form.folder_name = folder
+
+            create_folder(db, user, form)
+        except Exception as e:
+            print(e)
 
     try:
         for uploaded_file in files:
-            filename = uploaded_file.filename
-            file_path = dir_path + filename
+            file_name = uploaded_file.filename
+            file_path = os.path.join(dir_path, file_name)
 
             with open(file_path, "wb+") as file_object:
                 file_object.write(uploaded_file.file.read())
 
             new_file = models.File(
-                file_path = file_path,
+                file_name = file_name,
+                folder = folder,
                 username = user,
             )
 
             db.add(new_file)
             db.commit()
-    except:
+    except Exception as e:
+        print(e)
         return False
 
     return True
 
-def get_file(db, user, form, folder):
-    file_path = 'files/' + user + '/' + form.file_name
-
-    return db.query(models.File).filter(
-        models.File.file_path == file_path
-    ).first().file_path
-
-def delete_file(db, user, form):
+def download_file(db, user, form, folder):
     file_name = form.file_name
-    file_path = 'files/' + user + '/' + file_name
-    file = db.query(models.File).filter(
-        models.File.file_path == file_path
-    ).first()
+
+    if check_file_existance(db, user, folder, file_name):
+        file_path = os.path.join('files', user, folder, file_name)
+
+        return file_path
+    else:
+        return False
+
+def delete_file(db, user, form, folder):
+    file_name = form.file_name
+
+    file = check_file_existance(db, user, folder_file_name)
 
     if file:
-        path = file.file_path
+        file_path = os.path.join('files', user, folder, file_name)
 
         try:
             os.remove(path)
@@ -187,23 +230,20 @@ def delete_file(db, user, form):
     else:
         return False
 
-def rename_file(db, user, form):
+def rename_file(db, user, form, folder):
     old_file_name = form.old_file_name
     new_file_name = form.new_file_name
-    dir_path = 'files/' + user + '/' + old_file_name
-    old_path = dir_path + old_file_name
-    new_path = dir_path + new_file_name
 
-    file = db.query(models.File).filter(
-        models.File.file_path == old_file_path
-    ).first()
+    file = check_file_existance(db, user, folder, old_file_name)
 
     if file:
-        path = file.file_path
-
         try:
-            file.file_path = new_file_path
-            os.rename(old_file_path, new_file_path)
+            dir_path = os.path.join('files', user, folder)
+            old_path = os.path.join(dir_path, old_file_name)
+            new_path = os.path.join(dir_path, new_file_name)
+
+            file.file_name = new_file_name
+            os.rename(old_path, new_path)
 
             db.commit()
         except:
@@ -252,11 +292,12 @@ def create_user(db: Session, user):
 
 def create_resetting_pass_token(db: Session, form):
     email = form.email
+
     if not db.query(models.User).filter(models.User.email == email).first():
         return False
 
     generated_token = hashlib.sha256(
-        (email + "Bezp5").encode('utf-8')
+        (email + secret).encode('utf-8')
     ).hexdigest()
 
     new_token = models.Token(
@@ -275,6 +316,7 @@ def create_resetting_pass_token(db: Session, form):
     conn = SMTP(smtp_server)
     conn.set_debuglevel(False)
     conn.login(sender_email, password)
+
     try:
         conn.sendmail(sender_email, email, msg.as_string())
     finally:
@@ -286,18 +328,23 @@ def change_users_password(db: Session, form):
     token = form.token
     new_password = form.new_password
 
-    entry =  db.query(models.Token).filter(
+    request =  db.query(models.Token).filter(
         models.Token.token == token
     ).first()
-    if not entry:
+
+    if not request:
         return False
 
     user = db.query(models.User).filter(
         models.User.email == entry.email
     ).first()
-    user.password = hashlib.sha256(new_password.encode('utf-8')).hexdigest()
 
-    db.commit()
+    try:
+        user.password = hashlib.sha256(new_password.encode('utf-8')).hexdigest()
+
+        db.commit()
+    except Exception as e:
+        print(e)
 
     return True
 

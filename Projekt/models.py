@@ -40,14 +40,19 @@ class Token(Base):
 class File(Base):
     __tablename__ = "files"
 
-    file_path = Column(
+    file_name = Column(
         String(MAX_STRING_LEN),
-        unique=True,
+        primary_key=True,
+        index=True,
+    )
+    folder = Column(
+        String(MAX_STRING_LEN),
         primary_key=True,
         index=True,
     )
     username = Column(
         String(MAX_STRING_LEN),
+        primary_key=True,
         index=True,
     )
 
