@@ -221,6 +221,45 @@ iframe {
   padding-bottom: 54px;
 }
 
+.login100-form-header {
+  font-family: Poppins-Bold;
+  font-size: 24px;
+  color: #333333;
+  line-height: 1.2;
+  text-align: center;
+
+  width: 100%;
+  display: block;
+  padding-bottom: 15px;
+}
+
+.login100-form-text {
+  font-family: Poppins-Bold;
+  color: #333333;
+  line-height: 1.2;
+  text-align: center;
+
+  width: 100%;
+  display: block;
+  padding-bottom: 24px;
+}
+
+input[type="file"] {
+  display: none;
+}
+.custom-file-upload {
+  border: 1px solid #ccc;
+  width: 100%;
+  display: block;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.custom-file-block {
+  width: 100%;
+  display: block;
+  padding: 6px 12px;
+}
+
 
 /*---------------------------------------------*/
 .wrap-input100 {
