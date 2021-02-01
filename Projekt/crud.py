@@ -96,11 +96,17 @@ def rename_folder(db, user, form):
 # Sharing link
 
 def list_shared_files(db, link):
-    folder = jwt.decode(link, secret, algorithms=["HS256"]).subject
+    try:
+        folder = jwt.decode(link, secret, algorithms=["HS256"]).subject
+    except:
+        return False
     return get_folder_content(db, folder)
 
 def download_shared_file(db, link, form):
-    user = jwt.decode(link, secret, algorithms=["HS256"]).subject
+    try:
+        user = jwt.decode(link, secret, algorithms=["HS256"]).subject
+    except:
+        return False
     file_name = form.file_name
     file_path = 'files/' + user + '/' + file_name
 
@@ -111,7 +117,11 @@ def download_shared_file(db, link, form):
 def create_sharing_link(db, user, form):
     # folder = form.folder_name
     folder = user
-    sharing_link = jwt.encode({"subject": folder}, secret, algorithm = "HS256")
+    sharing_link = jwt.encode(
+        {"subject": folder, "exp": datetime.utcnow()},
+        secret,
+        algorithm = "HS256"
+    )
 
     return sharing_link
     # if check_folder_existance(db, user, folder):
