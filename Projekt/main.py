@@ -95,7 +95,7 @@ def download_shared_file(
     form: schemas.File_download,
     db: Session = Depends(get_db),
 ):
-    file_path = crud.download_shared_file(db, user, form, link)
+    file_path = crud.download_shared_file(db, link, form)
     if not file_path:
         raise HTTPException(
             status_code=400,

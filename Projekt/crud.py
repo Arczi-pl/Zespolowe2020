@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_
 
 import models, schemas
+import datetime
 import hashlib
 import os
 import jwt
@@ -124,15 +125,16 @@ def rename_folder(db, user, form):
 
 def list_shared_files(db, link):
     try:
-        (user, folder) = jwt.decode(link, secret, algorithms=["HS256"]).subject
-    except:
+        (user, folder) = jwt.decode(link, secret, algorithms=["HS256"])['subject']
+    except Exception as e:
+        print(e)
         return False
 
     return get_folder_content(db, user, folder)
 
 def download_shared_file(db, link, form):
     try:
-        (user, folder) = jwt.decode(link, secret, algorithms=["HS256"]).subject
+        (user, folder) = jwt.decode(link, secret, algorithms=["HS256"])['subject']
     except:
         return False
 
@@ -148,7 +150,10 @@ def create_sharing_link(db, user, form):
 
     if check_folder_existance(db, user, folder):
         sharing_link = jwt.encode(
-            {"subject": [user, folder], "exp": datetime.utcnow()},
+            {
+                "subject": [user, folder],
+                "exp": datetime.datetime.utcnow(),
+            },
             secret,
             algorithm = "HS256"
         )
