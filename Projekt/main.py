@@ -145,7 +145,7 @@ def create_folder(
     if crud.create_folder(db, user, form):
         return {"desc": "Folder created"}
     else:
-        return {"desc": "Problems with creating folder"}
+        return {"desc": "Such folder already exists"}
 
 @app.delete("/delete_folder")
 def delete_folder(
@@ -161,7 +161,7 @@ def delete_folder(
     else:
         return {"desc": "Such folder didn't exist"}
 
-@app.post("/rename_folder/{folder_name}")
+@app.post("/rename_folder")
 def rename_folder(
     form: schemas.Folder_rename,
     Authorize: AuthJWT = Depends(),

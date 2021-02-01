@@ -3,6 +3,7 @@ from sqlalchemy import or_
 
 import models, schemas
 import datetime
+import shutil
 import hashlib
 import os
 import jwt
@@ -62,28 +63,29 @@ def create_folder(db, user, form):
 
 def delete_folder(db, user, form):
     folder_name = form.folder_name
+
     folder = db.query(models.Folder).filter(
         models.Folder.username == user,
         models.Folder.name == folder_name,
     ).first()
 
     try:
-        path = os.path.join('files', user, folder)
+        path = os.path.join('files', user, folder_name)
 
         files = db.query(models.File).filter(
             models.File.username == user,
-            models.File.folder == folder,
+            models.File.folder == folder_name,
         ).all()
 
         for file in files:
-            os.remove(os.path.join(path, file.file_name))
             db.delete(file)
 
-        os.remove(path)
+        shutil.rmtree(path)
 
         db.delete(folder)
         db.commit()
-    except:
+    except Exception as e:
+        print(e)
         return False
 
     return True
@@ -218,13 +220,13 @@ def download_file(db, user, form, folder):
 def delete_file(db, user, form, folder):
     file_name = form.file_name
 
-    file = check_file_existance(db, user, folder_file_name)
+    file = check_file_existance(db, user, folder, file_name)
 
     if file:
-        file_path = os.path.join('files', user, folder, file_name)
-
         try:
-            os.remove(path)
+            file_path = os.path.join('files', user, folder, file_name)
+
+            os.remove(file_path)
 
             db.delete(file)
             db.commit()
