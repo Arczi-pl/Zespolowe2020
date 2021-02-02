@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createElement } from 'react';
 import Tilt from 'react-tilt';
 import ReactDOM from 'react-dom';
 import Cookies from 'universal-cookie';
@@ -16,17 +16,18 @@ const DownloadShared = () => {
   let { id } = useParams();
   cookies.set("share_link", id);
   //download_file(id)
-  window.onload = listFiles
+  window.onload = () => {listFiles(id)}
   console.log(typeof(board))
   //var board = [["Test", "das"], ["DAs", "das"]]
   return (
     <div className="limiter">
     <div className="container-login100">
       <div className="wrap-login101">
-
+        <div><h3>Kliknij na wybrany plik, aby go pobrać<br/></h3></div>
+        <div className="wrap-login102">
         <div id="files"><table id="mytable"><tbody></tbody>
         
-        </table></div>
+        </table></div></div>
 
       </div>
     </div>
@@ -59,24 +60,33 @@ function download_file(id){
     .then(data => console.log(data));
 }
 
-function listFiles(){ 
+function listFiles(id){ 
   var x = document.getElementById('mytable').getElementsByTagName('tbody')[0]
 
-  var url = "/shared_folder/" + getCookie("shared_link")
+  var arr = []
+  var url = "/shared_folder/" + id//getCookie("share_link")
   fetch(url)
   .then(response => response.json())
   .then(data => {
     var r, c
-    if(typeof(data["Shared files"]) == "array")
     for (var a of data["Shared files"]){
       r = x.insertRow()
       c = r.insertCell()
       var newText = document.createTextNode(a);
+      let temp = String(a)
+      c.onclick = () => {
+        var myurl = '/download_shared_file/' + id
+
+      }
       c.appendChild(newText)
+      r.appendChild(document.createElement("button"))
     }
+    /*for (var a of data["Shared files"]){
+      arr.push([a, "Pobierz"])
+    }*/
   });
 
-  console.log(x)
+  console.log(arr)
   return x
 
 }
