@@ -53,13 +53,13 @@ function getFileSubmit(){
 
 
 function uploadFileSubmit(){
-  const my_file = document.getElementById("fileinput")
+  const my_file = document.getElementById("file_input")
   const plik = new Blob([my_file.files[0]], {type: my_file.files[0].type})
   const filename = my_file.value.split(/[\s\\]+/).pop();
   const data = new FormData()
   data.append("files", plik, filename);
 
-  var url = "/upload_file";
+  var url = "/upload_file/";
   var fetchOpiotns = {
     method: "POST",
     headers: {
@@ -73,7 +73,8 @@ function uploadFileSubmit(){
   fetch(url, fetchOpiotns)
   .then(function(res){ 
     return res.json(); })
-  .then(function(data){ 
+  .then(function(data){
+    console.log(data) 
     var json = JSON.stringify(data);
     var obj = JSON.parse(json)
     //TODO: To by można ulepszyć :/
