@@ -10,7 +10,7 @@ const cookies = new Cookies();
 
 document.title = "Przesyłaj i odbieraj bez logowania"
 
-const NoLogin = () => {
+const P2P = () => {
   return (
     <div className="limiter">
     <div className="container-login100">
@@ -107,8 +107,6 @@ function loginSubmit(){
 
 
     })
- 
-
 
 }
 
@@ -125,4 +123,4 @@ function noLoginSendSubmit(){
 function passwordResetSubmit(){
   window.alert("Reset hasła: jakiś MIMEText niezdefiniowany na serwerze ;/")
 }
-export default NoLogin;
+export default P2P;

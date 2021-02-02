@@ -12,7 +12,7 @@ import {
 import Home from './components/Home';
 import Register from './components/Register';
 import Main from './components/Main';
-import NoLogin from './components/NoLogin';
+import P2P from './components/P2P';
 import P2PSend from './components/P2PSend';
 import P2PReceive from './components/P2PReceive';
 import About from './components/About';
@@ -23,7 +23,7 @@ class App extends Component {
       <Router>
           <Route exact path="/" component={Home} />
           <Route path="/register" component={Register} />
-          <Route path="/nologin" component={NoLogin} />
+          <Route path="/p2p" component={P2P} />
           <Route path="/p2p_send" component={P2PSend} />
           <Route path="/p2p_receive" component={P2PReceive} />
           <Route path='/main' component={Main} />
