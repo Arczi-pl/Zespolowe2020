@@ -6,14 +6,21 @@ const Links = () => {
   return (
     <div className="limiter">
     <div className="container-main">
+    <h1>Pliki:</h1>
+    
       <div id="table"></div>
+      <button className="login100-form-btn" type="button" onClick={shareFiles}>
+          Udostępnij
+      </button>
     </div>
   </div>
   );
 
 }
 
-
+function shareFiles(){
+  alert("coming soon")
+}
 function getFolderContent(params) {
   let url = "/folder/main";
 
@@ -36,7 +43,7 @@ function getFolderContent(params) {
 
         var board = [];
         for (const i in table) {
-          board.push([table[i], "<Udostępnij>"])
+          board.push([table[i]])
         }
 
         ReactDOM.render((
