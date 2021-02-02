@@ -23,7 +23,7 @@ export const SidebarData = [
     cName: 'nav-text'
   },
   {
-    title: 'Centrum udostępniania',
+    title: 'Udostępnianie',
     path: '/links',
     icon: <BiIcons.BiLinkAlt />,
     cName: 'nav-text'
