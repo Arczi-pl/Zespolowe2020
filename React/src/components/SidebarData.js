@@ -5,37 +5,37 @@ import * as MdIcons from 'react-icons/md';
 
 export const SidebarData = [
   {
-    title: 'Home',
+    title: 'Przesył P2P',
     path: '/p2p',
     icon: <BiIcons.BiTransfer />,
     cName: 'nav-text'
   },
   {
-    title: 'Upload Files',
+    title: 'Wstaw pliki',
     path: '/upload',
     icon: <AiIcons.AiOutlineCloudUpload />,
     cName: 'nav-text'
   },
   {
-    title: 'Account',
+    title: 'Konto',
     path: '/account',
     icon: <MdIcons.MdAccountCircle />,
     cName: 'nav-text'
   },
   {
-    title: 'Manage Links',
+    title: 'Udostępnianie',
     path: '/links',
     icon: <BiIcons.BiLinkAlt />,
     cName: 'nav-text'
   },
   {
-    title: 'About',
+    title: 'O nas',
     path: '/about',
     icon: <AiIcons.AiOutlineInfoCircle />,
     cName: 'nav-text'
   },
   {
-   title: 'Logout',
+   title: 'Wyloguj',
    path: '/logout',
    cName: 'nav-text'
   }
