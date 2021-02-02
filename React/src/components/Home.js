@@ -45,7 +45,7 @@ const Home = () => {
 
           <div className="text-center p-t-12">
             
-            <a  type="button" className="txt2" href="/password_reset">
+            <a  type="button" className="txt2" href="/reset_password">
             <span className="txt1">
               Nie pamiętasz hasła? <span style={{color: "rgba(0, 0, 0, 0)"}}>.</span>
             </span>
