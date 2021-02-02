@@ -28,7 +28,7 @@ class App extends Component {
           <Route path="/p2p_send" component={P2PSend} />
           <Route path="/p2p_receive" component={P2PReceive} />
           <Route path='/main' component={Main} />
-          <Route path='/download_shared/:id' component={DownloadShared} />
+          <Route path='/download_shared/:id?/:file?' component={DownloadShared} />
       </Router>
     );
   }

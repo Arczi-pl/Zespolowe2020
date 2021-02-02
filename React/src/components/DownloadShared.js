@@ -14,19 +14,42 @@ document.title = "Pobierz udostępniony plik"
 const DownloadShared = () => {
 
   let { id } = useParams();
-  download_file(id)
-
+  cookies.set("share_link", id);
+  //download_file(id)
+  window.onload = listFiles
+  console.log(typeof(board))
+  //var board = [["Test", "das"], ["DAs", "das"]]
   return (
     <div className="limiter">
     <div className="container-login100">
       <div className="wrap-login101">
 
-            <h1>{id}</h1>
+        <div id="files"><table id="mytable"><tbody></tbody>
         
+        </table></div>
+
       </div>
     </div>
   </div>
   );
+}
+
+
+
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
 }
 
 
@@ -36,47 +59,25 @@ function download_file(id){
     .then(data => console.log(data));
 }
 
-function loginSubmit(){  
-  alert("Hi")
-  let payload = {email: document.getElementById("email").value,
-    password: document.getElementById("password").value}
+function listFiles(){ 
+  var x = document.getElementById('mytable').getElementsByTagName('tbody')[0]
 
-  let url = "/login";
-
-  let fetchOptions = {
-    method: "POST",
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload)
+  var url = "/shared_folder/" + getCookie("shared_link")
+  fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    var r, c
+    if(typeof(data["Shared files"]) == "array")
+    for (var a of data["Shared files"]){
+      r = x.insertRow()
+      c = r.insertCell()
+      var newText = document.createTextNode(a);
+      c.appendChild(newText)
     }
+  });
 
-    fetch(url, fetchOptions)
-    .then(function(res){ 
-      return res.json(); })
-    .then(function(data){ 
-      var json = JSON.stringify(data)
-      var obj = JSON.parse(json)
-
-      if(obj.hasOwnProperty('detail')){
-        ReactDOM.render(
-          <span style={{color: "red"}}>Nieprawidłowy login lub hasło</span>,
-          document.getElementById('error_msg')
-        );
-      }
-      else if(obj.hasOwnProperty("access_token")){
-        const cookies = new Cookies();
-        cookies.set("access_token", obj.access_token);
-        cookies.set("refresh_token", obj.refresh_token);
-        let path = `/main`; 
-        window.location.href= path;
-      }
-
-
-    })
- 
-
+  console.log(x)
+  return x
 
 }
 

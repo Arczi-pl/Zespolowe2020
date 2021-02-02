@@ -59,7 +59,7 @@ function uploadFileSubmit(){
   const data = new FormData()
   data.append("files", plik, filename);
 
-  var url = "/upload_file/";
+  var url = "/upload_file/main";
   var fetchOpiotns = {
     method: "POST",
     headers: {
