@@ -62,10 +62,6 @@ const Home = () => {
         
 
         <div>
-        <a href ="/nologin"><span className="login100-form-title">Lub przesyłaj bez logowania</span>
-        <Tilt className="Tilt">
-        <div className="login100-pic js-tilt"><img src={send6}  alt="IMG"/></div>         
-        </Tilt></a>
       </div>
       </div>
     </div>
@@ -76,7 +72,7 @@ const Home = () => {
 
 
 function loginSubmit(){  
-  alert("Hi")
+
   let payload = {email: document.getElementById("email").value,
     password: document.getElementById("password").value}
 

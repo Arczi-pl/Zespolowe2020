@@ -76,6 +76,27 @@ function listFiles(id){
       let temp = String(a)
       c.onclick = () => {
         var myurl = '/download_shared_file/' + id
+        
+        let fetchOptions = {
+          method: "POST",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({"file_name":temp})
+          }
+
+          fetch(myurl, fetchOptions)
+          .then(response => response.blob())
+          .then(blob => {
+              var url2 = window.URL.createObjectURL(blob);
+              var b = document.createElement('a');
+              b.href = url2;
+              b.download = temp;
+              document.body.appendChild(b); // we need to append the element to the dom -> otherwise it will not work in firefox
+              b.click();    
+              b.remove();  //afterwards we remove the element again         
+          });
 
       }
       c.appendChild(newText)

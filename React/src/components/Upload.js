@@ -5,7 +5,7 @@ import Navbar from './Navbar';
 //Obrazy
 import send6 from './send6.png';
 
-const Transfer = () => {
+const Upload = () => {
   return (
     <div className="limiter">
     <div className="container-main">
@@ -25,10 +25,7 @@ const Transfer = () => {
           <div id="error_msg"></div></form>
 
         <div>
-        <a type="button" onClick={getFileSubmit} href =""><span className="login100-form-title">Pobierz plik</span>
-        <Tilt className="Tilt">
-        <div className="login100-pic js-tilt"><img src={send6}  alt="IMG"/></div>         
-        </Tilt></a>
+
 
       </div>
     </div>
@@ -46,11 +43,6 @@ function fileChange(){
         document.getElementById("chosen_file").innerText = " Wybierz plik"
     }
 }
-
-function getFileSubmit(){
-    window.alert("Pobierz plik");
-  }
-
 
 function uploadFileSubmit(){
   const my_file = document.getElementById("file_input")
@@ -111,4 +103,4 @@ function getCookie(cname) {
   }
   return "";
 }
-export default Transfer;
+export default Upload;

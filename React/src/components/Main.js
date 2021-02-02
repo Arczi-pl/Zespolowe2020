@@ -1,9 +1,12 @@
 import React from 'react';
 import Navbar from './Navbar';
-import Transfer from './Transfer';
+import Upload from './Upload';
 import About from './About';
 import Account from './Account';
 import Links from './Links';
+import P2P from './P2P';
+import P2PSend from './P2PSend';
+import P2PReceive from './P2PReceive';
 import Cookies from 'universal-cookie';
 
 import {
@@ -15,7 +18,7 @@ import {
 } from 'react-router-dom';
 
 class Main extends React.Component {
-
+ 
   render() {
   if(inSession()){ // dodatkowe zabepieczenie 
       return (
@@ -23,10 +26,13 @@ class Main extends React.Component {
           <Router>
             <Navbar />
             <Switch>
-              <Route path='/main'><Redirect to='/transfer' /></Route>
+              <Route path='/main'><Redirect to='/p2p' /></Route>
+              <Route path='/p2p' component={P2P} />
+              <Route path='/p2p_send' component={P2PSend} />
+              <Route path='/p2p_receive' component={P2PReceive} />
               <Route path='/account' component={Account} />
               <Route path='/links' component={Links} />
-              <Route path='/transfer' component={Transfer} />
+              <Route path='/upload' component={Upload} />
               <Route path='/about' component={About} />
               <Route path='/logout' render={() => {logout()} } />
             </Switch>

@@ -13,8 +13,8 @@ document.title = "Przesyłaj i odbieraj bez logowania"
 const P2P = () => {
   return (
     <div className="limiter">
-    <div className="container-login100">
-      <div className="wrap-login100">
+    <div className="container-main">
+  
         
         <div className="login100-form validate-form">
           <span className="login100-form-title">
@@ -35,32 +35,7 @@ const P2P = () => {
           <div className="text-center p-t-136">
           </div>
         </div>
-        
-
-        <div>
-        <span className="login100-form-title">Odbierz plik używając kodu<br/><br/></span>
-        <div className="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-            <input className="input100" type="text" name="email" placeholder="Kod odbioru" id="email"/>
-            <span className="focus-input100"></span>
-            <span className="symbol-input100">
-              <i className="fa fa-key" aria-hidden="true"></i>
-            </span>
-          </div>
-
-        <div className="container-login100-form-btn">
-            <button className="login100-form-btn" type="button" onClick={loginSubmit}>
-              Pobierz
-            </button>
-          </div>
-
-          <div className="text-center p-t-136">
-            <a className="txt2" href="/">
-              Zaloguj się
-              <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
-            </a>
-          </div>
-      </div>
-      </div>
+     
     </div>
   </div>
   );

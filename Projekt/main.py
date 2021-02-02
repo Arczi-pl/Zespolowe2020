@@ -100,7 +100,7 @@ def list_shared_files(
 
     return {"Shared files": shared_files}
 
-@app.get("/download_shared_file/{link}")
+@app.post("/download_shared_file/{link}")
 def download_shared_file(
     link: str,
     form: schemas.File_download,

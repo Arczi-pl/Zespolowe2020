@@ -18,8 +18,8 @@ const P2PSend = () => {
   return (
     <div className="limiter">
     <div className="container-login100">
-      <div className="wrap-login100">
-        
+
+      <div className="wrap-p2p">
         <div className="login100-form validate-form">
           <span className="login100-form-title">
             Kod połączenia
@@ -63,7 +63,7 @@ const P2PSend = () => {
             </button>
           </div>
           <div className="text-center p-t-136">
-            <a className="txt2" href="/nologin">
+            <a className="txt2" href="/main">
               Powrót
               <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
             </a>
@@ -243,14 +243,19 @@ function ready() {
 
 
 function fileChosen() {
-    const file = document.getElementById('file_input').files[0]
-    const blob = new Blob(document.getElementById('file_input').files, { type: file.type })
+    try {
+      const file = document.getElementById('file_input').files[0]
+      const blob = new Blob(document.getElementById('file_input').files, { type: file.type })
 
-    conn.send({
-    file: blob,
-    filename: file.name,
-    filetype: file.type
-    })
+      conn.send({
+        file: blob,
+        filename: file.name,
+        filetype: file.type
+      })
+
+    } catch (e) {
+        }
+
 };
 
 function fileChange(){
