@@ -45,7 +45,8 @@ const ChangePassword = () => {
                   Wyślij
                 </button>
               </div>
-    
+              <div id="error_msg"></div>
+
 
               <div className="text-center p-t-136">
                 <a className="txt2" href="#" onClick={goHomeSubmit}>
@@ -84,6 +85,24 @@ function registerSubmit() {
     },
     body: JSON.stringify(payload)
     }    
-   fetch(url, fetchOptions);
+   fetch(url, fetchOptions).then(function(res){ 
+    return res.json(); })
+  .then(function(data){ 
+    var json = JSON.stringify(data)
+    
+    if(json == "false"){
+      ReactDOM.render(
+        <span style={{color: "red"}}>Nieprawidłowy token</span>,
+        document.getElementById('error_msg')
+      );
+    }
+   else{
+     alert("Hasło zmienione")
+    let path = `/`; 
+    window.location.href= path
+   }
+    
+    
+  });;
 }
 export default ChangePassword;

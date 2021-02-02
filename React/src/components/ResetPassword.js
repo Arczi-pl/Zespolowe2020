@@ -27,13 +27,16 @@ const ResetPassword = () => {
               </div>
 
               <div className="container-login100-form-btn">
-                <button className="login100-form-btn" type="button" onClick={registerSubmit}>
+                <button className="login100-form-btn" type="button" onClick={sendTokenSubmit}>
                   Wyślij
                 </button>
               </div>
+
     
 
               <div className="text-center p-t-136">
+                <div id="error_msg"></div>
+
                 <a className="txt2" href="#" onClick={goHomeSubmit}>
                   Zaloguj się
                   <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
@@ -55,7 +58,7 @@ function goHomeSubmit(){
   window.location.href= path;
 }
 
-function registerSubmit() {
+function sendTokenSubmit() {
 
   let payload = {"email":document.getElementById("email").value};
 
@@ -69,6 +72,26 @@ function registerSubmit() {
     },
     body: JSON.stringify(payload)
     }    
-   fetch(url, fetchOptions);
+   fetch(url, fetchOptions)
+   .then(function(res){ 
+    return res.json(); })
+  .then(function(data){ 
+    var json = JSON.stringify(data)
+    var obj = JSON.parse(json)
+
+    if(obj.hasOwnProperty('detail')){
+      ReactDOM.render(
+        <span style={{color: "red"}}>Nieprawidłowy email</span>,
+        document.getElementById('error_msg')
+      );
+    }
+   else{
+    let path = `/change_password`; 
+    window.location.href= path
+   }
+    
+    
+  });
+   
 }
 export default ResetPassword;
