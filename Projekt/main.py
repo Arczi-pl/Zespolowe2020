@@ -64,6 +64,17 @@ def authjwt_exception_handler(request: Request, exc: AuthJWTException):
 
 # Sharing link functionality
 
+@app.post("/get_username")
+def create_sharing_link(
+    Authorize: AuthJWT = Depends(),
+    db: Session = Depends(get_db),
+):
+    Authorize.jwt_required()
+    user = Authorize.get_jwt_subject()
+
+    return {"user": user}
+ 
+
 @app.post("/create_sharing_link")
 def create_sharing_link(
     form: schemas.Create_sharing_link,
