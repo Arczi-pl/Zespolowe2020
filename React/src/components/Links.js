@@ -5,19 +5,48 @@ const Links = () => {
   getFolderContent();
   return (
     <div className="limiter">
-    <div className="container-main">
-    <h1>Pliki:</h1>
-    
-      <div id="table"></div>
-      <button className="login100-form-btn" type="button" onClick={shareFiles}>
-          Udostępnij
-      </button>
+    <div className="container-login100">
+      <div className="wrap-login100">
+        
+        <form className="login100-form validate-form">
+          <span className="login100-form-title">
+            Centrum udostępniania
+          </span>
+
+          <div>
+            <input className="input100"  name="pass" placeholder="wpisz plik do usunięcia" id="del"/>
+          </div>
+          
+          <div className="container-login100-form-btn">
+            <button className="login100-form-btn" type="button" onClick={deleteFiles}>
+              Usun plik
+            </button>
+          </div>
+
+          <div className="container-login100-form-btn">
+            <button className="login100-form-btn" type="button" onClick={deleteFiles}>
+              Udostępnij
+            </button>
+          </div>
+
+          </form>
+
+          
+          <h1>PLIKI:</h1>
+          <div id="table"></div>
+        
+
+      </div>
     </div>
   </div>
+
   );
 
 }
 
+function deleteFiles(){
+  alert("comming soon")
+}
 function shareFiles(){
   alert("coming soon")
 }
