@@ -1,6 +1,10 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 
+import ssl
+from smtplib import SMTP_SSL as SMTP
+from email.mime.text import MIMEText
+
 import models, schemas
 import datetime
 import shutil
@@ -9,6 +13,14 @@ import os
 import jwt
 
 secret = os.environ.get("KEY")
+
+link = "http://0.0.0.0:8080/reset_password/"
+port = 587
+smtp_server = "smtp.gmail.com"
+sender_email = os.environ.get("MY_MAIL")
+password = os.environ.get("PASS")
+
+text_subtype = 'plain'
 
 # Folders
 
