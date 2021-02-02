@@ -89,64 +89,6 @@ function copyToClipboard() {
     copyText.setAttribute("disabled", "disabled");  
   }
 
-function loginSubmit(){  
-  alert("Hi")
-  let payload = {email: document.getElementById("email").value,
-    password: document.getElementById("password").value}
-
-  let url = "/login";
-
-  let fetchOptions = {
-    method: "POST",
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload)
-    }
-
-    fetch(url, fetchOptions)
-    .then(function(res){ 
-      return res.json(); })
-    .then(function(data){ 
-      var json = JSON.stringify(data)
-      var obj = JSON.parse(json)
-
-      if(obj.hasOwnProperty('detail')){
-        ReactDOM.render(
-          <span style={{color: "red"}}>Nieprawidłowy login lub hasło</span>,
-          document.getElementById('error_msg')
-        );
-      }
-      else if(obj.hasOwnProperty("access_token")){
-        const cookies = new Cookies();
-        cookies.set("access_token", obj.access_token);
-        cookies.set("refresh_token", obj.refresh_token);
-        let path = `/main`; 
-        window.location.href= path;
-      }
-
-
-    })
- 
-
-
-}
-
-function registerSubmit(){
-  let path = `/register`; 
-  window.location.href= path
-}
-
-function noLoginSendSubmit(){
-  window.alert("Wysyłanie bez logowania");
-
-}
-
-function passwordResetSubmit(){
-  window.alert("Reset hasła: jakiś MIMEText niezdefiniowany na serwerze ;/")
-}
-
 
 /* Send P2P */
 

@@ -79,65 +79,6 @@ const P2PRecive = () => {
 
 
 
-function loginSubmit(){  
-  alert("Hi")
-  let payload = {email: document.getElementById("email").value,
-    password: document.getElementById("password").value}
-
-  let url = "/login";
-
-  let fetchOptions = {
-    method: "POST",
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload)
-    }
-
-    fetch(url, fetchOptions)
-    .then(function(res){ 
-      return res.json(); })
-    .then(function(data){ 
-      var json = JSON.stringify(data)
-      var obj = JSON.parse(json)
-
-      if(obj.hasOwnProperty('detail')){
-        ReactDOM.render(
-          <span style={{color: "red"}}>Nieprawidłowy login lub hasło</span>,
-          document.getElementById('error_msg')
-        );
-      }
-      else if(obj.hasOwnProperty("access_token")){
-        const cookies = new Cookies();
-        cookies.set("access_token", obj.access_token);
-        cookies.set("refresh_token", obj.refresh_token);
-        let path = `/main`; 
-        window.location.href= path;
-      }
-
-
-    })
- 
-
-
-}
-
-function registerSubmit(){
-  let path = `/register`; 
-  window.location.href= path
-}
-
-function noLoginSendSubmit(){
-  window.alert("Wysyłanie bez logowania");
-
-}
-
-function passwordResetSubmit(){
-  window.alert("Reset hasła: jakiś MIMEText niezdefiniowany na serwerze ;/")
-}
-
-
 /* Receive P2P */
 
 
@@ -294,19 +235,6 @@ function getUrlParam(name) {
     else
         return results[1];
 };
-
-/**
- * Send a signal via the peer connection and add it to the log.
- * This will only occur if the connection is still alive.
- */
-function signal(sigName) {
-    if (conn && conn.open) {
-        conn.send(sigName);
-        console.log(sigName + " signal sent");
-    } else {
-        console.log('Connection is closed');
-    }
-}
 
     
 

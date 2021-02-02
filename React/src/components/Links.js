@@ -18,6 +18,12 @@ const Links = () => {
           </div>
           
           <div className="container-login100-form-btn">
+            <button className="login100-form-btn" type="button" onClick={downloadFiles}>
+              Pobierz plik
+            </button>
+          </div>
+
+          <div className="container-login100-form-btn">
             <button className="login100-form-btn" type="button" onClick={deleteFiles}>
               Usun plik
             </button>
@@ -94,6 +100,36 @@ function deleteFiles(){
 
 
     })
+}
+
+
+function downloadFiles(){
+  let payload = {file_name: document.getElementById("del").value}
+
+  let url = "/download_file/main";
+
+  let fetchOptions = {
+    method: "POST",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      "Authorization": "Bearer " + getCookie("access_token")
+
+    },
+    body: JSON.stringify(payload)
+    }
+
+    fetch(url, fetchOptions)
+    .then(response => response.blob())
+          .then(blob => {
+              var url2 = window.URL.createObjectURL(blob);
+              var b = document.createElement('a');
+              b.href = url2;
+              b.download = document.getElementById("del").value;
+              document.body.appendChild(b); // we need to append the element to the dom -> otherwise it will not work in firefox
+              b.click();    
+              b.remove();  //afterwards we remove the element again         
+          });
 }
 
 function shareFiles(){
