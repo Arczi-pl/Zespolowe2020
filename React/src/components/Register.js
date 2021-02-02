@@ -62,13 +62,6 @@ const Register = () => {
                 </a>
               </div>
             </form>
-
-            <div>
-            <a onClick={noLoginSendSubmit} href =""><span className="login100-form-title">Lub przesyłaj bez logowania</span>
-            <Tilt className="Tilt">
-            <div className="login100-pic js-tilt"><img src={send6}  alt="IMG"/></div>         
-            </Tilt></a>
-            </div>
           
           </div>
         </div>

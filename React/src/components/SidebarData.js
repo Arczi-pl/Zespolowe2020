@@ -6,8 +6,14 @@ import * as MdIcons from 'react-icons/md';
 export const SidebarData = [
   {
     title: 'Home',
-    path: '/transfer',
+    path: '/p2p',
     icon: <BiIcons.BiTransfer />,
+    cName: 'nav-text'
+  },
+  {
+    title: 'Upload Files',
+    path: '/upload',
+    icon: <AiIcons.AiOutlineCloudUpload />,
     cName: 'nav-text'
   },
   {
