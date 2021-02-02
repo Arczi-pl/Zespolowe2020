@@ -140,23 +140,19 @@ def rename_folder(db, user, form):
 def list_shared_files(db, link):
     try:
         (user, folder) = jwt.decode(link, secret, algorithms=["HS256"])['subject']
-        print(user, folder)
         return get_folder_content(db, user, folder)
     except Exception as e:
-        print("Błąd")
         print(e)
         return False
 
 
 
 def download_shared_file(db, link, form):
-    print('HEEEY')
     try:
         (user, folder) = jwt.decode(link, secret, algorithms=["HS256"])['subject']
     except:
         return False
 
-    print(user, folder)
     file_name = form.file_name
 
     if check_file_existance(db, user, folder, file_name):
