@@ -17,6 +17,8 @@ import P2PSend from './components/P2PSend';
 import P2PReceive from './components/P2PReceive';
 import About from './components/About';
 import DownloadShared from './components/DownloadShared.js';
+import ResetPassword from './components/ResetPassword';
+import ChangePassword from './components/ChangePassword';
 
 class App extends Component {
   render() {
@@ -29,6 +31,8 @@ class App extends Component {
           <Route path="/p2p_receive" component={P2PReceive} />
           <Route path='/main' component={Main} />
           <Route path='/download_shared/:id?/:file?' component={DownloadShared} />
+          <Route path='/reset_password' component={ResetPassword} />
+          <Route path='/change_password' component={ChangePassword} />
       </Router>
     );
   }

@@ -5,8 +5,8 @@ const Links = () => {
   getFolderContent();
   return (
     <div className="limiter">
-    <div className="container-login100">
-      <div className="wrap-p2p">
+    <div className="container-main">
+    
         
         <form className="login100-form validate-form">
           <span className="login100-form-title">
@@ -37,9 +37,16 @@ const Links = () => {
          
           </form>
 
-          
-          <h1>PLIKI:</h1>
+          <form className="login100-form validate-form">
+          <span className="login100-form-title">
+            Pliki:
+          </span>
+
+
           <div id="table"></div>
+          </form>
+
+          
 
           <span className="login100-form-title">
             <div id="delet"></div>
@@ -48,7 +55,6 @@ const Links = () => {
 
       </div>
     </div>
-  </div>
 
   );
 
@@ -77,7 +83,6 @@ function deleteFiles(){
       var json = JSON.stringify(data)
       var obj = JSON.parse(json)
 
-      alert(json)
       if(obj.hasOwnProperty('desc')){
         if(obj.desc == "Such file didn't exist"){
           ReactDOM.render(
@@ -120,16 +125,25 @@ function downloadFiles(){
     }
 
     fetch(url, fetchOptions)
-    .then(response => response.blob())
-          .then(blob => {
-              var url2 = window.URL.createObjectURL(blob);
-              var b = document.createElement('a');
-              b.href = url2;
-              b.download = document.getElementById("del").value;
-              document.body.appendChild(b); // we need to append the element to the dom -> otherwise it will not work in firefox
-              b.click();    
-              b.remove();  //afterwards we remove the element again         
-          });
+    .then(response => {
+      if(response.status != 400){
+        return null
+      }
+      return response.blob()
+    })
+    .then(blob => {
+      if (blob == null) {
+        alert("Nieprawidłowa nazwa pliku")
+        return
+      }
+      var url2 = window.URL.createObjectURL(blob);
+      var b = document.createElement('a');
+      b.href = url2;
+      b.download = document.getElementById("del").value;
+      document.body.appendChild(b); // we need to append the element to the dom -> otherwise it will not work in firefox
+      b.click();    
+      b.remove();  //afterwards we remove the element again         
+    });
 }
 
 function shareFiles(){
