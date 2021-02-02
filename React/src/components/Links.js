@@ -5,8 +5,8 @@ const Links = () => {
   getFolderContent();
   return (
     <div className="limiter">
-    <div className="container-login100">
-      <div className="wrap-p2p">
+    <div className="container-main">
+    
         
         <form className="login100-form validate-form">
           <span className="login100-form-title">
@@ -37,9 +37,16 @@ const Links = () => {
          
           </form>
 
-          
-          <h1>PLIKI:</h1>
+          <form className="login100-form validate-form">
+          <span className="login100-form-title">
+            Pliki:
+          </span>
+
+
           <div id="table"></div>
+          </form>
+
+          
 
           <span className="login100-form-title">
             <div id="delet"></div>
@@ -48,7 +55,6 @@ const Links = () => {
 
       </div>
     </div>
-  </div>
 
   );
 
