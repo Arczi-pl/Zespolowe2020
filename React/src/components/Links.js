@@ -6,13 +6,13 @@ const Links = () => {
   return (
     <div className="limiter">
     <div className="container-login100">
-      <div className="wrap-login100">
+      <div className="wrap-p2p">
         
         <form className="login100-form validate-form">
           <span className="login100-form-title">
             Centrum udostępniania
           </span>
-
+         
           <div>
             <input className="input100"  name="pass" placeholder="wpisz plik do usunięcia" id="del"/>
           </div>
@@ -22,18 +22,22 @@ const Links = () => {
               Usun plik
             </button>
           </div>
-
+          
           <div className="container-login100-form-btn">
-            <button className="login100-form-btn" type="button" onClick={deleteFiles}>
+            <button className="login100-form-btn" type="button" onClick={shareFiles}>
               Udostępnij
             </button>
           </div>
-
+         
           </form>
 
           
           <h1>PLIKI:</h1>
           <div id="table"></div>
+
+          <span className="login100-form-title">
+            <div id="delet"></div>
+          </span>
         
 
       </div>
@@ -45,11 +49,86 @@ const Links = () => {
 }
 
 function deleteFiles(){
-  alert("comming soon")
+  let payload = {file_name: document.getElementById("del").value}
+
+  let url = "/delete_file/main";
+
+  let fetchOptions = {
+    method: "DELETE",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      "Authorization": "Bearer " + getCookie("access_token")
+
+    },
+    body: JSON.stringify(payload)
+    }
+
+    fetch(url, fetchOptions)
+    .then(function(res){ 
+      return res.json(); })
+    .then(function(data){ 
+      var json = JSON.stringify(data)
+      var obj = JSON.parse(json)
+
+      alert(json)
+      if(obj.hasOwnProperty('desc')){
+        if(obj.desc == "Such file didn't exist"){
+          ReactDOM.render(
+            <span style={{color: "red"}}>Nie ma takiego pliku</span>,
+            document.getElementById('delet')
+          );
+        }
+        else {
+          ReactDOM.render(
+            <span style={{color: "green"}}>Plik usunięty pomyślnie</span>,
+            document.getElementById('delet')
+          );
+          
+        }
+       
+      }
+      else if(obj.hasOwnProperty("access_token")){
+        alert("Usunięto")
+      }
+
+
+    })
 }
+
 function shareFiles(){
-  alert("coming soon")
+  let url = "/create_sharing_link";
+  let payload = {folder_name: "main"};
+
+
+  let fetchOptions = {
+    method: "POST",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      "Authorization": "Bearer " + getCookie("access_token")
+
+    },
+    body: JSON.stringify(payload)
+    }
+
+    fetch(url, fetchOptions)
+    .then(function(res){ 
+      return res.json(); })
+    .then(function(data){ 
+      var json = JSON.stringify(data)
+      var obj = JSON.parse(json)
+
+      if(obj.hasOwnProperty('link')){
+        alert("LINK DO FOLDERU: " + obj.link)
+      }
+      else{
+        alert("Coś poszło nie tak, skontaktuj się z administratorem")
+      }
+
+      })
 }
+
 function getFolderContent(params) {
   let url = "/folder/main";
 
