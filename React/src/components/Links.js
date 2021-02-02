@@ -201,7 +201,7 @@ function getFolderContent(params) {
         {board.map((row, i) => (
           <div key={i}>
             {row.map((col, j) => (
-              <span key={j}>{col}</span>
+              <span key={j} onClick={() => document.getElementById("del").value=col}>{col}</span>
                 ))}
                 </div>
               ))}
