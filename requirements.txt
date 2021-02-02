@@ -1,0 +1,10 @@
+flask
+python-dotenv
+uvicorn
+fastapi
+aiofiles
+freeze
+cryptography
+pyjwt
+fastapi_jwt_auth
+sqlalchemy
