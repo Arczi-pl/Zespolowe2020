@@ -15,6 +15,7 @@ RUN pip3 install -r requirements.txt
 
 ENV FLASK_APP=main.py
 ENV FLASK_RUN_HOST=0.0.0.0
+#ENV SQL_URL=mysql+pymysql://[user]:[password]@host.docker.internal:3306/[dbname]
 ENV SQL_URL=mysql+pymysql://aplikacja:Aplikacja123@host.docker.internal:3306/aplikacja
 
 
