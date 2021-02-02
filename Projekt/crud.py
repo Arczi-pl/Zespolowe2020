@@ -8,7 +8,7 @@ import hashlib
 import os
 import jwt
 
-secret = os.environ.get("KEY")
+secret = 'os.environ.get("KEY")'
 
 # Folders
 
@@ -128,18 +128,23 @@ def rename_folder(db, user, form):
 def list_shared_files(db, link):
     try:
         (user, folder) = jwt.decode(link, secret, algorithms=["HS256"])['subject']
+        print(user, folder)
+        return get_folder_content(db, user, folder)
     except Exception as e:
+        print("Błąd")
         print(e)
         return False
 
-    return get_folder_content(db, user, folder)
+
 
 def download_shared_file(db, link, form):
+    print('HEEEY')
     try:
         (user, folder) = jwt.decode(link, secret, algorithms=["HS256"])['subject']
     except:
         return False
 
+    print(user, folder)
     file_name = form.file_name
 
     if check_file_existance(db, user, folder, file_name):
@@ -154,7 +159,7 @@ def create_sharing_link(db, user, form):
         sharing_link = jwt.encode(
             {
                 "subject": [user, folder],
-                "exp": datetime.datetime.utcnow(),
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(days=1),
             },
             secret,
             algorithm = "HS256"
