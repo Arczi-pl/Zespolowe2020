@@ -156,6 +156,20 @@ iframe {
   margin: 0 auto;
 }
 
+.container-about {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  font-size: 17px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-top: 70px;
+  padding-left:20px;
+ 
+}
 .container-login100 {
   width: 100%;  
   min-height: 100vh;
