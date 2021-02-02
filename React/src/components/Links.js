@@ -126,16 +126,25 @@ function downloadFiles(){
     }
 
     fetch(url, fetchOptions)
-    .then(response => response.blob())
-          .then(blob => {
-              var url2 = window.URL.createObjectURL(blob);
-              var b = document.createElement('a');
-              b.href = url2;
-              b.download = document.getElementById("del").value;
-              document.body.appendChild(b); // we need to append the element to the dom -> otherwise it will not work in firefox
-              b.click();    
-              b.remove();  //afterwards we remove the element again         
-          });
+    .then(response => {
+      if(response.status != 400){
+        return null
+      }
+      return response.blob()
+    })
+    .then(blob => {
+      if (blob == null) {
+        alert("Nieprawidłowa nazwa pliku")
+        return
+      }
+      var url2 = window.URL.createObjectURL(blob);
+      var b = document.createElement('a');
+      b.href = url2;
+      b.download = document.getElementById("del").value;
+      document.body.appendChild(b); // we need to append the element to the dom -> otherwise it will not work in firefox
+      b.click();    
+      b.remove();  //afterwards we remove the element again         
+    });
 }
 
 function shareFiles(){
