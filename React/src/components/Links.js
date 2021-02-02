@@ -83,7 +83,6 @@ function deleteFiles(){
       var json = JSON.stringify(data)
       var obj = JSON.parse(json)
 
-      alert(json)
       if(obj.hasOwnProperty('desc')){
         if(obj.desc == "Such file didn't exist"){
           ReactDOM.render(
