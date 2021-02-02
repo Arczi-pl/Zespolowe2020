@@ -317,7 +317,7 @@ def create_resetting_pass_token(db: Session, form):
         return False
 
     generated_token = hashlib.sha256(
-        (email + secret).encode('utf-8')
+        (email + secret + datetime.datetime.utcnow()).encode('utf-8')
     ).hexdigest()
 
     new_token = models.Token(
