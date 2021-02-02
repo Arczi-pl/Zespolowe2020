@@ -355,7 +355,7 @@ def change_users_password(db: Session, form):
         return False
 
     user = db.query(models.User).filter(
-        models.User.email == entry.email
+        models.User.email == request.email
     ).first()
 
     try:

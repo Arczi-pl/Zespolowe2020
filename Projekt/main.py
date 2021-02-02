@@ -271,7 +271,10 @@ def change_users_password(
     request: schemas.Reset_pass_form,
     db: Session = Depends(get_db),
 ):
-    return crud.change_users_password(db, request)
+    if crud.change_users_password(db, request):
+        return {"desc": "Password changed successfully"}
+    else:
+        return {"desc": "Incorrect token"}
 
 @app.post('/login')
 def login(
